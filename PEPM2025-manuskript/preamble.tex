@@ -8,11 +8,12 @@
 \usepackage{semantic}
 \usepackage{mathtools}
 \usepackage{float}
-\usepackage{cleveref}
 \usepackage{xspace}
 %\usepackage{fancyvrb}
 \usepackage{listings}
 \usepackage{thmtools}
+\usepackage{cleveref}
+\usepackage{subcaption}
 
 %\usepackage[
 %backend=biber,
@@ -86,6 +87,77 @@
 \newcommand{\Types}{\skat{Types}}
 
 \newcommand{\pra}{\hookrightarrow}
+
+\newcommand{\bs}{$\textbackslash$}
+
+\lstdefinelanguage{elm}
+{
+    morekeywords={
+            alias,
+            as,
+            case,
+            else,
+            exposing,
+            if,
+            import,
+            in,
+            let,
+            module,
+            of,
+            port,
+            then,
+            type,
+            where
+        },
+    sensitive=true, % Keywords are case-sensitive
+    morecomment=[s]{\{-}{-\}}, % s is for start and end delimiter
+    morecomment=[l]{--},
+    morestring=[b]" % Defines that strings are enclosed in double quotes
+}
+
+
+\lstdefinestyle{inline}{
+    columns=fullflexible,
+    showspaces=false,
+    showtabs=false,
+    breaklines=true,
+    showstringspaces=false,
+    breakatwhitespace=true,
+    escapeinside={(*@}{@*)},
+    % commentstyle=\color{greencomments},
+    % keywordstyle=\color{bluekeywords},
+    % stringstyle=\color{redstrings},
+    % numberstyle=\color{graynumbers},
+    % numberstyle=\tiny\color{codegray},
+    % backgroundcolor=\color{myinlinecolorback},
+    basicstyle=\ttfamily\footnotesize,
+    frame=single,
+    frameround=tttt,
+    tabsize=2,
+    captionpos=b,
+    numbers=none,
+    % xleftmargin=2em,
+}
+
+\lstdefinestyle{examplestyle}{
+    % backgroundcolor=\color{myexamplecolorback},
+    % commentstyle=\color{codegreen},
+    % keywordstyle=\color{magenta},
+    % numberstyle=\tiny\color{codegray},
+    % stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    tabsize=2,
+    frame=single,
+    numbers=none,
+    % xleftmargin=2em,
+    frameround=tttt,
+    % framexleftmargin=1.5em
+}
+
+\lstset{style=inline}
 
 %%% Local Variables:
 %%% mode: latex
