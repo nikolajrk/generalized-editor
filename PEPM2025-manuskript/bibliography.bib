@@ -357,3 +357,39 @@ url = "https://synasc.ro/2021/",
   school  = "University of Copenhagen",
   year    = "2024"
 }
+
+@inproceedings{10.1145/2997364.2997365,
+author = {Voelter, Markus and Szab\'{o}, Tam\'{a}s and Lisson, Sascha and Kolb, Bernd and Erdweg, Sebastian and Berger, Thorsten},
+title = {Efficient development of consistent projectional editors using grammar cells},
+year = {2016},
+isbn = {9781450344470},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2997364.2997365},
+doi = {10.1145/2997364.2997365},
+abstract = {The definition of a projectional editor does not just specify the notation of a language, but also how users interact with the notation. Because of that it is easy to end up with different interaction styles within one and between multiple languages. The resulting inconsistencies have proven to be a major usability problem. To address this problem, we introduce grammar cells, an approach for declaratively specifying textual notations and their interactions for projectional editors. In the paper we motivate the problem, give a formal definition of grammar cells, and define their mapping to low-level editor behaviors. Our evaluation based on project experience shows that grammar cells improve editing experience by providing a consistent and intuitive ``text editor-like'' user experience for textual notations. At the same time they do not limit language composability and the use of non-textual notations, the primary benefits of projectional editors. We have implemented grammar cells for Jetbrains MPS, but they can also be used with other projectional editors.},
+booktitle = {Proceedings of the 2016 ACM SIGPLAN International Conference on Software Language Engineering},
+pages = {28–40},
+numpages = {13},
+keywords = {Jetbrains MPS, Language Engineering, Language Workbenches, Projectional Editing, Usability},
+location = {Amsterdam, Netherlands},
+series = {SLE 2016}
+}
+
+@inproceedings{10.1145/3544548.3580785,
+author = {Beckmann, Tom and Rein, Patrick and Ramson, Stefan and Bergsiek, Joana and Hirschfeld, Robert},
+title = {Structured Editing for All: Deriving Usable Structured Editors from Grammars},
+year = {2023},
+isbn = {9781450394215},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3544548.3580785},
+doi = {10.1145/3544548.3580785},
+abstract = {Structured editing can show benefits in learnability, tool building, and editing efficiency in programming. However, creating a usable structured editor is laborious and demanding, typically requiring tool builders to manually create or adjust editing interactions. We present Sandblocks, a system that allows users to automatically generate structured editors for every language with a formal grammar available. Our system’s input reconciliation process acts on arbitrary syntax trees to provides consistent interactions across our generated editors. Our editors’ editing experience is designed to be familiar to users from textual editing but, compared to previous work, requires no manual annotation in the grammars. We demonstrate our editors’ usability across languages through a user study (N=18). Compared to conventional text editors, even with minimal training, participants only took on average 21\% (JS), 34\% (Clojure), and 95\% (RegExp) longer and reported that editing felt natural with a score of 6/7.},
+booktitle = {Proceedings of the 2023 CHI Conference on Human Factors in Computing Systems},
+articleno = {595},
+numpages = {16},
+keywords = {grammars, structured editing, text-like editing},
+location = {Hamburg, Germany},
+series = {CHI '23}
+}

@@ -200,19 +200,39 @@ editor of this kind is that of the Cornell Program Synthesizer by Reps and
 Teitelbaum \cite{10.1145/358746.358755}, that was designed with the
 PL/I language in mind.
 
-More recent developments introduce models of computation that are
-specialized towards this form of editing. The Hazelnut framework by
-Omar et al. \cite{hazelnut} and the work by Godiksen et al. and
+Reps and Teitelbaum showed \cite{10.1145/390011.808247} how one can
+generalize their original work to build a Synthesizer Generator that
+would create a syntax-directed editor for any given programming
+language, given a specification of its syntax in the form of an
+attribute grammar. Around the same time, Donzeau-Gouge et
+al. developed the Mentor programming environment
+\cite{10.5555/800054.801990} that involved a command language, Mentol,
+and allowed designers to specify language-specific specializations
+using a specification language, Metal. More recently, in
+\cite{10.1145/2997364.2997365} Voelker et al. introduce a notion of
+grammar cells which is intended to be a formalism for defining textual
+notations for syntax-directed editors. In
+\cite{10.1145/3544548.3580785}, Beckmann et al. describe the
+Sandblocks system that lets users automatically generate a
+syntax-directed editor, given a description of the syntax of a given
+language. The focus here is on that of usability of editors of this
+kind.
+
+Other recent developments introduce models of computation that
+describe the workflow of syntax-directed editors and the correctness
+properties that they must satisfy. The Hazelnut framework by Omar et
+al. \cite{hazelnut} and the work by Godiksen et al. and
 \cite{type_safe_structure_editor} introduce editor calculi that
 describe the syntax and operational semantics of editing commands,
 including how such commands can be combined. This line of work has
 been tailored specifically towards functional programming: The edit
-operations manipulate abstract syntax trees from
-an applied $\lambda$-calculus.
+operations manipulate abstract syntax trees from an applied
+$\lambda$-calculus.
 
-A major advantage of this approach is that it is typed -- each such editor calculus
-is equipped with a type system that guarantees that if an editor term
-$E$ is well-typed, then $E$ will produce a well-formed program.
+A major advantage of this approach is that it is typed and that type
+systems can be provably sound: The type system of the editor calculus
+will then guarantee that if an editor term $E$ is well-typed, then $E$
+will produce a well-formed program.
 
 However, existing editor calculi do not account for context-sensitive
 aspects of program syntax, and notably not the binding 
@@ -223,17 +243,9 @@ programming language that the editor must support. Whenever the
 programming language changes, the type safety results for the editor
 calculus have had to be proved anew. An example of this is the work by
 Andersen et al \cite{10.1145/3587216.3587221} on extending the editor
-calculus of \cite{type_safe_structure_editor} with let-declarations.
-
-In later work, Reps and Teitelbaum showed \cite{10.1145/390011.808247}
-how one can generalize their original work to build a Synthesizer
-Generator that would create a syntax-directed editor for any given
-programming language, given a specification of its syntax in the form
-of an attribute grammar. Around the same time, Donzeau-Gouge et
-al. developed the Mentor programming environment
-\cite{10.5555/800054.801990} that involved a command language, Mentol,
-and allowed designers to specify language-specific specializations
-using a specification language, Metal.
+calculus of \cite{type_safe_structure_editor} with let-declarations;
+the authors had to provide an entire new proof of the soundness of the
+revised type system.
 
 In this paper we propose a generalized editor calculus that deals with
 these two issues.
