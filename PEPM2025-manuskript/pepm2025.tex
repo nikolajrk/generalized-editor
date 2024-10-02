@@ -1,6 +1,11 @@
 \documentclass[sigplan,review]{acmart}
 \input{preamble}
 \newcommand{\abt}{\textsf{abt}\xspace}
+\newcommand{\ec}[1]{\ensuremath{\textsf{#1}}\xspace}
+\newcommand{\rec}{\ec{rec}\,}
+\newcommand{\chld}{\ec{child}\,}
+\newcommand{\parnt}{\ec{parent}}
+\newcommand{\nil}{\ec{nil}}
 
 \AtBeginDocument{%
   \providecommand\BibTeX{{%
@@ -336,12 +341,19 @@ expressions, describe the possible edit actions. The formation rules
 are given below.
 %
 \begin{align*}
-  E & ::= & \pi.E  \mid  \phi => E_1|E_2  \mid  E_1 \ggg E_2  \mid  \text{rec} \ x.E  \mid  x  \mid  \text{nil} \\
-    \pi & ::= & \text{child} \ n  \mid  \text{parent}  \mid  \{o\} \\
+  E & ::= & \pi.E  \mid  \phi => E_1|E_2  \mid  E_1 \ggg E_2  \mid  \rec  \ x.E  \mid  x  \mid  \nil  \\
+    \pi & ::= & \chld  \ n  \mid  \parnt   \mid  \{o\} \\
     \phi & ::= & \neg\phi  \mid  \phi_1 \wedge \phi_2  \mid  \phi_1 \vee \phi_2  \mid  @o  \mid  \Diamond o  \mid  \square o
 \end{align*}
 %
-Evaluation of {\abt}'s, which \cite{type_safe_structure_editor} introduces through a $eval$ construct, is not included in our generalized version. This omission is due to evaluation being entirely dependent on the dynamics of the language in focus, and not the static and structural properties the abstract syntax describes. To define the concept of evaluation in a generalized manner, it would be necessary to devise a formal and concise approach for specifying the semantics of operators.
+Evaluation of {\abt}'s, which \cite{type_safe_structure_editor}
+introduces through an \textsf{eval} construct, is not included in our
+generalized version. This omission is due to evaluation being entirely
+dependent on the dynamics of the language in focus, and not the static
+and structural properties the abstract syntax describes. To define the
+concept of evaluation in a generalized manner, it would be necessary
+to devise a formal and concise approach for specifying the semantics
+of operators.
 
 \begin{example}\label{ex:editor_calculus}
     We can define a version of the editor calculus for
@@ -350,7 +362,7 @@ Evaluation of {\abt}'s, which \cite{type_safe_structure_editor} introduces throu
         o \in \{ \text{let}, \text{exp}, \text{hole}_s, \text{plus}, \text{num}[n], \text{var}[x], \text{hole}_e \}
     \end{equation*}
     We can then write e.g. $(@\text{hole}_e =>
-    \{\text{plus}\}.\text{nil}|\text{nil})$. This expression would
+    \{\text{plus}\}.\nil |\nil )$. This expression would
     substitute the current tree encapsulated by the cursor with the
     $plus$ operator, if the cursor is at the operator
     $\text{hole}_e$. 
@@ -374,9 +386,9 @@ cursor must reside, it does not inherently guarantee the presence of
 only one cursor within that subtree. Therefore, it becomes necessary
 to introduce the concept of well-formed {\abt}'s. Informally, a
 well-formed \abt is simply an \abt containing exactly one cursor. This
-is guaranteed when an \abt can be interpreted as $C[\dot{a}]$, meaning
-the context $C$, where $\ctxhole$ is substituted with a tree $\dot{a}$,
-where the cursor-operator is either the root $\dot{a}$, or one of the
+is guaranteed when an \abt can be interpreted as $C[a]$, meaning
+the context $C$, where $\ctxhole$ is substituted with a tree $a$,
+where the cursor-operator is either the root $a$, or one of the
 children of the root. 
 
 
@@ -421,11 +433,11 @@ used to recursively iterate an expression.
     \\\\
     \infeshort{Seq-Trivial}
         {}
-        {\lr{\text{nil} \ggg E_2, a} \ltrans{\epsilon} \lr{E_2,a}}    
+        {\lr{\nil  \ggg E_2, a} \ltrans{\epsilon} \lr{E_2,a}}    
     \\\\
     \infeshort{Recursion}
         {}
-        {\lr{\text{rec } x.E,a} \ltrans{\epsilon} \lr{E[x:=rec \ x.E], a}}
+        {\lr{\rec  x.E,a} \ltrans{\epsilon} \lr{E[x:=rec \ x.E], a}}
     \\\\
     \infeshort{Context}
         {a \ltrans{\pi} a'}
@@ -442,11 +454,15 @@ cursor, by either substituting it with an operator or moving the
 cursor up or down the tree. Transitions are therefore of the form $a
 \ltrans{\pi} a'$, where $a, a' \in \ABT{}$ and $\pi \in Apc$. 
 
-For substitution we define the transition rule for every label $\{o\}
-\in Apc$, which substitutes the \abt currently encapuslated by the
-cursor with $o$. The general case of this rule is shown in
-\cref{fig:substitution_rules}. The side-condition ensures that we can
-only substitute operators of sort $s$ with {\abt}'s of sort $s$.
+For substitution we define the transition rule for every label
+$\{o\} \in Apc$, which substitutes the \abt currently encapsulated by
+the cursor with an operator
+$o(\Vec{x_1}.\hole{{s_1}}; \dots ; \Vec{x_n}.\hole{{s_n}})$ in which
+the binders of the $i$'th argument of $o$ are $\Vec{x_i}$ and the sort
+of the $i$'th argument is $s_i$. The general case of this rule is
+shown in \cref{fig:substitution_rules}. The side-condition ensures
+that we can only substitute operators of sort $s$ with {\abt}'s of
+sort $s$.
 
 \federeboks{c}{
     \infeshort{Ins}
@@ -455,7 +471,8 @@ only substitute operators of sort $s$ with {\abt}'s of sort $s$.
         $\begin{array}{l}
          \hat{a}, o \in \ABT{}_s % , \\ \text{ where $s$ is the sort of $o$}
         \end{array}$
-}{\caption{General form of reduction rule for substitution}\label{fig:substitution_rules}}
+}{\caption{General reduction rule for substitution with an
+  operator with binders}\label{fig:substitution_rules}}
 
 For cursor movement we define two transition rules "child  $i$" and
 "parent" for every operator $o$ of arity $(\Vec{s_1}.s_1, \dots,$ $
@@ -467,14 +484,14 @@ operator, respectively.
 \federeboks{c}{
     \infeshort{Child-i}
         {}
-        {[\hat{o}(\Vec{x_1}.\hat{a}_1; \dots; \Vec{x_n}.\hat{a}_n)] \ltrans{\text{child} \ i}} \\ 
+        {[\hat{o}(\Vec{x_1}.\hat{a}_1; \dots; \Vec{x_n}.\hat{a}_n)] \ltrans{\chld  \ i}} \\ 
         \quad \quad \quad \quad \quad $o(\Vec{x_1}.\hat{a}_1; \dots; \Vec{x_i}.[a_i]; \dots; \Vec{x_n}.\hat{a}_n)$
     \\\\
     \infeshort{Parent}
         {}
-        {o(\Vec{x_1}.\hat{a}_1; \dots; \Vec{x_i}.[\hat{a}_i]; \dots; \Vec{x_n}.\hat{a}_n) \ltrans{\text{parent}}} \\
+        {o(\Vec{x_1}.\hat{a}_1; \dots; \Vec{x_i}.[\hat{a}_i]; \dots; \Vec{x_n}.\hat{a}_n) \ltrans{\parnt }} \\
         \quad \quad \quad \quad \quad $[\hat{o}(\Vec{x_1}.\hat{a}_1; \dots; \Vec{x_n}.\hat{a}_n)]$
-}{\caption{General form of reduction rules for cursor movement}\label{fig:cursor_movement_rules}}
+}{\caption{General reduction rules for cursor movement}\label{fig:cursor_movement_rules}}
 
 \begin{example}\label{ex:substitution_rules}
     We now define the semantics of the editor calculus for our simple language. We do not show the transition rules for editor expressions, since these are equivalent to the ones presented in \cref{fig:editor_expression_rules}. 
@@ -502,10 +519,10 @@ operator, respectively.
              \hat{a} \in \ABT{}_e
             \end{array}$
     }{\caption{Selected reduction rules for substitution}\label{fig:example_substitution_rules}}
-    Notice that in every rule we ensure that the substitution can only be performed if the \abt $\hat{a}$ is of the same sort as the operator. For example, given the configuration \[ \lr{\{let\}.nil, \text{let $x = [\hole{e}]$ in $x+x$}}\] we cannot substitute in a statement, as shown below:
+    Notice that in every rule we ensure that the substitution can only be performed if the \abt $\hat{a}$ is of the same sort as the operator. For example, given the configuration \[ \lr{\{let\}.nil, \text{let $x = [\hole{e}]$ in $x+x$}}\] we cannot substitute in a statement, as shown below.
     \begin{center}
     \begin{tabular}{c}
-        \inference[(Context)]
+        \inference[\runa{Context}]
             {\inference[(let)]
                 {}
                 {[\hole{e}]  \ltransn{\{\text{let}\}}}
@@ -513,7 +530,7 @@ operator, respectively.
                     \hole{e} \notin \ABT{}_s
                 \end{array}$
             }
-            {\lr{\{\text{let}\}.\text{nil}, \text{let $x = [\hole{e}]$ in $x+x$}} \ltransn{\{\text{let}\}}}
+            {\lr{\{\text{let}\}.\nil , \text{let $x = [\hole{e}]$ in $x+x$}} \ltransn{\{\text{let}\}}}
     \end{tabular}
     \end{center}
         
@@ -521,19 +538,19 @@ operator, respectively.
     \federeboks{c}{
         \infelong{letc-1}
             {}
-            {[\text{let}(a_1; x.a_2)] \ltrans{\text{child} \ 1} \text{let}([a_1]; x.a_2)}
+            {[\text{let}(a_1; x.a_2)] \ltrans{\chld  \ 1} \text{let}([a_1]; x.a_2)}
         \\\\
         \infelong{letc-2}
             {}
-            {[\text{let}(a_1; x.a_2)] \ltrans{\text{child} \ 2} \text{let}(a_1; x.[a_2])}
+            {[\text{let}(a_1; x.a_2)] \ltrans{\chld  \ 2} \text{let}(a_1; x.[a_2])}
         \\\\
         \infelong{letp-1}
             {}
-            {\text{let}([a_1]; x.a_2) \ltrans{\text{parent}} [\text{let}(a_1; x.a_2)]}
+            {\text{let}([a_1]; x.a_2) \ltrans{\parnt } [\text{let}(a_1; x.a_2)]}
         \\\\
         \infelong{letp-2}
             {}
-            {\text{let}(a_1; x.[a_2]) \ltrans{\text{parent}} [\text{let}(a_1; x.a_2)]}
+            {\text{let}(a_1; x.[a_2]) \ltrans{\parnt } [\text{let}(a_1; x.a_2)]}
     }{\caption{Reduction rules for cursor movement on the $let$ operator}\label{fig:example_cursor_movement_rules}}
 \end{example}
 
@@ -560,7 +577,33 @@ expected in \cref{fig:satisfaction_relation_connectives}.
         {[\hat{a}] |= \phi_1 \vee \phi_2}
 }{\caption{Satisfaction relation for propositional connectives}\label{fig:satisfaction_relation_connectives}}
 
-The general form of the satisfaction rules for the modalities $@o$, $\Diamond o$ and $\square o$ are defined in \cref{fig:satisfaction_relation_modal}. 
+% \begin{figure}[h]
+%   \centering
+%   \begin{tabular}{lc}
+%   \infeshort{Negation}
+%         {[\hat{a}] \nvDash \phi}
+%         {[\hat{a}] |= \neg \phi}
+%     \\\\
+%     \infeshort{Conjunction}
+%         {[\hat{a}] |= \phi_1 \quad [\hat{a}] |= \phi_2}
+%         {[\hat{a}] |= \phi_1 \wedge \phi_2}
+%     \\\\
+%     \infeshort{Disjunction-1}
+%         {[\hat{a}] |= \phi_1}
+%         {[\hat{a}] |= \phi_1 \vee \phi_2}
+%     \\\\
+%     \infeshort{Disjunction-2}
+%         {[\hat{a}] |= \phi_2}
+%     {[\hat{a}] |= \phi_1 \vee \phi_2}
+%     \end{tabular}
+%   \caption{Satisfaction relation for propositional connectives}
+%   \label{fig:satisfaction_relation_connectives}
+% \end{figure}
+
+The general form of the satisfaction rules for the modalities $@o$,
+$\Diamond o$ and $\square o$ are defined in
+\cref{fig:satisfaction_relation_modal}.
+
 \federeboks{c}{
     \infeshort{At-op}
         {}
@@ -610,11 +653,12 @@ ABT encapsulated by the cursor.
 
 \subsection{Guarantees from the original editor calculus}
 
-The original editor calculus of \cite{type_safe_structure_editor} is equipped
-with a type system that types configurations relative to a path in the
-ast of the configuration. Judgments are therefore of the form $p, \Gamma_e \vdash
-\lr{E,a} : \textsf{ok}$, where $p$ is a path in the ast $a$ and
-$\Gamma_e$ is a type environment.
+The original editor calculus of \cite{type_safe_structure_editor} is
+equipped with a type system that types configurations relative to a
+path in the ast of the configuration; this path represents the
+position of the cursor. Judgments are therefore of the form
+$p, \Gamma_e \vdash \lr{E,a} : \textsf{ok}$, where $p$ is a path in
+the ast $a$ and $\Gamma_e$ is a type environment.
 
 The type system of the original calculus guarantees that a well-typed
 configuration remains well-typed after a transition and that a
@@ -627,7 +671,7 @@ guarantees can be expressed as the following theorem.
   If $p, \Gamma_e \vdash \lr{E,a} : \textsf{ok}$ then
   \begin{enumerate}
   \item if $\lr{E,a} \ltrans{\alpha} \lr{E',a'}$, then
-    $(p,\Gamma_e)\downarrow_\alpha \vdash \lr{E',a'} : \textsf{ok}$
+    $(p,\Gamma_e)\downarrow_\alpha \, \vdash \lr{E',a'} : \textsf{ok}$
   
   \item $p, \Gamma_e \vdash \lr{E,a} \not\to \textsf{wrong}$
   \end{enumerate}
@@ -639,7 +683,8 @@ guarantees can be expressed as the following theorem.
 \subsection{A collection of lambda calculi}
 
 To encode the abstract binding trees, the simply typed lambda calculus
-suffices, so for an $a \in \ABT{}$ we have $\encode{a} \in \stlc$.
+suffices, so for an \abt $a$ its encoding $\encode{a}$ is a term in
+$\stlc$.
 
 In order to encode ABTs with cursors and expressions of the
 generalized editor calculus, we extend \stlc with more constructs.
@@ -678,8 +723,8 @@ each part of it can be seen in \cref{tab:encoding_requirements}.
  standard reduction semantics with reductions of the form $e \to
  e'$.
 
- Moreover, every calculus has a type systems with type judgements of
- the form $\Gamma \vdash e : \tau$, where $\tau$ ranges over a set of
+ Moreover, every calculus has a type systems with judgements of the
+ form $\Gamma \vdash e : \tau$, where $\tau$ ranges over a set of
  types \Types\ given by
 %
 \[  \tau ::= \tau_s \mid \tau \to \tau \mid \tau \times \tau  \]
@@ -895,7 +940,7 @@ recursively. \textit{parent} and \textit{insert} are simply encoded as \textit{u
 \federeboks{L L}{
     \encode{\textit{child} \ 1} = \textit{down}
     &
-    \encode{\textit{child} \ n} = \textit{right}\ \encode{\text{child} \ n - 1}
+    \encode{\textit{child} \ n} = \textit{right}\ \encode{\chld  \ n - 1}
     \\\\
     \encode{\textit{parent}} = \textit{up}
     &
@@ -946,14 +991,14 @@ of $E_1$ or $E_2$ on $C$ accordingly.
     \\[2mm]
     \encode{E_1 \ggg E_2}  = \lambda C:\text{Ctx}. \encode{E_2} (\encode{E_1} C)
     \\[2mm]
-    \encode{\text{rec } x.E} = \text{fix } ( \lambda x: (\text{Ctx} \to \text{Ctx}).\encode{E}) 
+    \encode{\rec x.E} = \text{fix } ( \lambda x: (\text{Ctx} \to \text{Ctx}).\encode{E}) 
     \\[2mm]
     \encode{\phi => E_1 | E_2} = \lambda C:\text{Ctx}.\text{match} \ (\encode{\phi} \ C.1) \\
         | \ \top ->  \encode{E_1} \ C 
     \\[2mm]
     | \  \bot ->  \encode{E_2} \ C 
     \\[2mm]
-    \encode{\text{nil}} = \lambda C:\text{Ctx}.C \quad \quad    \encode{x} = x
+    \encode{\nil } = \lambda C:\text{Ctx}.C \quad \quad    \encode{x} = x
 
 }{
     \caption{Encoding editor expressions}
@@ -1052,7 +1097,7 @@ $\square o$ consists of either applying $\Diamond o$ on all the children of the 
 %     \begin{align*}
 %          &\ \encode{\text{child\ $2$.nil $\ggg$ parent.nil}} \\
 %          =&\ \lambda C_1 . \encode{\text{parent.nil}} (\encode{\text{child\ $2$.nil}} C_1) \\
-%          =&\ \lambda C_1 . (\lambda C_2 . \encode{\text{nil}}(\encode{\text{parent}} C_2.1, C_2.2)) (\encode{\text{child\ $2$.nil}} C_1) \\
+%          =&\ \lambda C_1 . (\lambda C_2 . \encode{\nil }(\encode{\parnt} C_2.1, C_2.2)) (\encode{\text{child\ $2$.nil}} C_1) \\
 %          =&\ \lambda C_1 . (\lambda C_2 . \encode{nil}(up\ C_2.1, C_2.2)) (\encode{child\ 2.nil} C_1) \\
 %          =&\ \lambda C_1 . (\lambda C_2 . (\lambda C_3 . C_3)(up\ C_2.1, C_2.2)) (\encode{child\ 2.nil} C_1) \\
 %          \betar&\ \lambda C_1 . (\lambda C_2 . (up\ C_2.1, C_2.2)) (\encode{child\ 2.nil} C_1) \\

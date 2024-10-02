@@ -12,7 +12,7 @@
 %\usepackage{fancyvrb}
 \usepackage{listings}
 \usepackage{thmtools}
-\usepackage{cleveref}
+\usepackage[capitalise,noabbrev]{cleveref}
 \usepackage{subcaption}
 
 %\usepackage[
@@ -28,12 +28,14 @@
 \newcolumntype{R}{>{$}r<{$}} % right-oriented math column type
 \newcolumntype{C}{>{$}c<{$}} % center-oriented math column type
 
+\newcommand{\runa}[1]{\ensuremath{{\normalsize{\textsc{(#1)}}}\;\;}}
+
 \newcommand{\lr}[1]{\langle #1 \rangle} % config macro: <#1>
 \newcommand{\sub}[1]{\/\textsubscript{#1}} % subscript macro
 \newcommand{\ltrans}[1]{\stackrel{#1}{\Rightarrow}} % labelled transition pil
 \newcommand{\ltransn}[1]{\stackrel{#1}{\nRightarrow}} % labelled transition pil
-\newcommand{\infeshort}[1]{\inference[{\normalsize(#1)}\;\;]} %formatting of \inference, when in a table side by side
-\newcommand{\infelong}[1]{\inference[{\normalsize(#1)}\qquad]} %formatting of \inference, when on a single line
+\newcommand{\infeshort}[1]{\inference[\runa{#1}]} %formatting of \inference, when in a table side by side
+\newcommand{\infelong}[1]{\inference[\runa{#1}]} %formatting of \inference, when on a single line
 \newcommand{\define}{\stackrel{\text{def}}{=}} %def =
 \newcommand{\encode}[1]{\llbracket #1 \rrbracket} %encoding brackets
 \newcommand{\match}[1]{\{\mid #1 \mid\}} %encoding brackets
@@ -67,7 +69,7 @@
     \begin{figure}[H]
     \vspace{-2.9mm}
     \centering
-    \fbox{%
+    %\fbox{%
         \footnotesize\renewcommand{\arraystretch}{1.25}
         \setlength{\tabcolsep} {4pt}
         \begin{tabular}{#1}
@@ -75,7 +77,7 @@
             #2 \\
             \addlinespace[1.25ex]
         \end{tabular}
-    }
+    %}
     #3
     %\vspace{-2mm}
     \end{figure}
