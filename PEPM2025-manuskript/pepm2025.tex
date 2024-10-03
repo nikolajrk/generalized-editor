@@ -1131,11 +1131,18 @@ operational semantics of the original calculus.
 \begin{theorem}[Soundness] For every editor expression $E$ and \abt $a$
   we have that if
   %
-  \[ \lr{E,a} \ltrans{} \lr{E',a'} \]
+  \begin{equation} \lr{E,a} \ltrans{} \lr{E',a'} \label{eq:trans} \end{equation}
   then
-  \[ \encode{E}\encode{a} \rightarrow^{\ast}  \encode{E'}\encode{a'}  \]
+  \begin{equation} \encode{E}\encode{a} \rightarrow^{\ast}
+    \encode{E'}\encode{a'}  \label{eq:ctrans} \end{equation}
 \end{theorem}
-
+\begin{proof}(Outline) The proof proceeds by induction in the height
+  of the derivation tree for the transition \eqref{eq:trans}. There is
+  only one rule in the editor calculus that is not an axiom but has as
+  premise that a transition for another editor expression is
+  possible. Therefore, we first prove that the theorem holds for all
+  axioms, as these rules does not need an inductive hypothesis.
+\end{proof}
 Because of Theorem \ref{thm:subred}, we now get that our encoding is
 type-safe.
 
@@ -1189,13 +1196,13 @@ categories followed by concrete and abstract syntax given in BNF notation.
 % Every operator from the abstract syntax is represented by one or
 % more non-terminals in the concrete syntax.
 
-Earlier examples of specification languages do not have binding
-mechanisms in abstract syntax, which is a core feature of the
-generalized editor calculus. This motivates another possibility of
-defining a specification language for the generalized editor itself,
-which can assist the user in describing the syntax. This would also
-require a parser that can parse the necessary information assumed by
-the calculus (including binders).
+% Earlier examples of specification languages do not have binding
+% mechanisms in abstract syntax, which is a core feature of the
+% generalized editor calculus. This motivates another possibility of
+% defining a specification language for the generalized editor itself,
+% which can assist the user in describing the syntax. This would also
+% require a parser that can parse the necessary information assumed by
+% the calculus (including binders).
 
 Every syntactic category is represented by one or more non-terminals
 with a term, arity and operator name. The term might refer to other
@@ -1252,11 +1259,11 @@ From this specification language, it is possible to extract what is assumed by t
   Notably, a binder is used in the $insert$ operator, where the alias of $id_1$, specified as $id_2$ is bound within the sub-query.
 \end{example}
 
-\subsection{Code generation versus generic model}
+\subsection{Code generation versus a generic model}
 
-Another important thing to consider for the implementation is whether
-part of the editor's source code should be generated automatically,
-or if a generic model might suffice.
+An important design decision is that of whether the implementation
+should generate part of the source code of an editor instance or if a
+generic model might suffice.
 
 Automatic generation of source code offers the benefit of directly representing
 provided operators, along with their arity and sort, within an algebraic data
@@ -1265,10 +1272,9 @@ This ensures that only well-formed terms can be represented using the algebraic
 data types.
 
 However, opting for this method might require automatic generation or
-updates to both the
-definitions and signatures of some functions.
-This presents a challenge in ensuring that these functions maintain their intended
-behavior after the updates.
+updates to both the definitions and signatures of some functions.
+This presents a challenge in ensuring that these functions preserve
+their intended behavior after the updates.
 
 \begin{example}\label{ex:sql-data-types}
   Given the small SQL syntax \cref{ex:as-sql-lang}, one can generate the following algebraic data types in Elm:
@@ -1587,23 +1593,23 @@ benefit from type classes, which would allow for more general functions
 to be written, without the need for explicit references to specific
 function implementations for different sorts.
 
-For example, consider the cursor substitution operator (\cref{fig:substitution_rules}),
-where the editor calculus enforces that operators can only be substituted
-with operators of same sort. Initially, a straightforward approach involves
-having a substitution function for each sort $s \in \mathcal{S}$.
-This approach of course leads an implementer to consider generalization,
-i.e. how a single function can take any cursor-encapsulated \abt and replace it
-with an operator of the same sort. A solution to this could be
-
-using type classes, where we might have a type class called \texttt{substitutable}
-and having an instance for each sort.
-Having a typeclass is possible in Haskell (\cref{lst:haskell-typeclass}),
-but typeclasses are not directly supported by Elm.
-They can however be simulated with Elm records, as shown in the "typeclasses"
-Elm package\cite{elm-typeclass-package}.
-An example of such a simulation is shown in \cref{lst:elm-typeclass}.
-This typeclass simulation in Elm has the disadvantage of forcing an explicit
-reference to the typeclass "instance" in a generic function, in contrast to Haskell.
+For example, consider the cursor substitution operator
+(\cref{fig:substitution_rules}), where the editor calculus enforces
+that operators can only be substituted with operators of same
+sort. Initially, a straightforward approach involves having a
+substitution function for each sort $s \in \mathcal{S}$.  This
+approach of course leads an implementer to consider generalization,
+i.e. how a single function can take any cursor-encapsulated \abt and
+replace it with an operator of the same sort. A solution to this could
+be using type classes, where we might have a type class called
+\texttt{substitutable} and having an instance for each sort.  This is
+not directly supported Elm but in Haskell; we would then use the
+solution shown in \cref{lst:haskell-typeclass}.  Typeclasses can
+however be simulated with Elm records, as shown in the "typeclasses"
+Elm package\cite{elm-typeclass-package}.  An example of this is shown
+in \cref{lst:elm-typeclass}.  This approach has the disadvantage of
+forcing an explicit reference to the typeclass "instance" in a generic
+function, in contrast to Haskell.
 
 % TODO: replace this with a more interesting example, i.e. conditionals
 \begin{lstlisting}[language=Haskell,style=inline,caption={Haskell typeclass example},label={lst:haskell-typeclass}]
