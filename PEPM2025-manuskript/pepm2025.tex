@@ -69,7 +69,8 @@
 %%
 %% The "title" command has an optional parameter,
 %% allowing the author to define a "short title" to be used in page headers.
-\title{A type-safe generalized editor calculus}
+\title{A type-safe calculus for generating
+  syntax-directed editors}
 
 %%
 %% The "author" command and its associated commands are used to define
@@ -130,16 +131,18 @@
 \begin{abstract}
   
   Editor calculi make it possible to describe the actions of
-  syntax-directed editing and provide guarantees of safety through 
+  syntax-directed editing and provide guarantees of safety through
   their specialized type system: Well-typed editor scripts produce
   well-formed programs. So far, such calculi have been
   language-specific. In this paper we present a generalized editor
-  calculus, which can be used to instantiate a specialized
-  syntax-directed editor for any language, given its abstract
-  syntax. The generalized editor calculus is then encoded into a
+  calculus, which can be used to specify a specialized syntax-directed
+  editor for any language, given its abstract syntax. Moreover we show
+  how to implement an editor generator that allows one to generate an
+  editor calculus-basedç syntax-directed editor from a language
+  specification. The generalized editor calculus can be encoded into a
   simply typed lambda calculus, extended with pairs, booleans, pattern
-  matching and fixed points. This leads to a general type safety
-  result that will hold for any instantiation.
+  matching and fixed points. This implies a general type safety result
+  that holdsfor any instantiation.
   
 \end{abstract}
 
@@ -201,16 +204,15 @@
 Syntax-directed editors aka projectional editors are specialized
 editors that allow programmers to create programs directly using the
 syntax of the programming language, thereby bypassing the need for
-context-free parsing. A prominent early example of an
-editor of this kind is that of the Cornell Program Synthesizer by Reps and
-Teitelbaum \cite{10.1145/358746.358755}, that was designed with the
-PL/I language in mind.
+context-free parsing. A prominent early example of an editor of this
+kind is that of the Cornell Program Synthesizer by Reps and Teitelbaum
+\cite{10.1145/358746.358755}, designed with the PL/I language in mind.
 
-Reps and Teitelbaum showed \cite{10.1145/390011.808247} how one can
-generalize their original work to build a Synthesizer Generator that
-would create a syntax-directed editor for any given programming
-language, given a specification of its syntax in the form of an
-attribute grammar. Around the same time, Donzeau-Gouge et
+Reps and Teitelbaum also demonstrated \cite{10.1145/390011.808247} how
+one can generalize their original work to build a Synthesizer
+Generator that will create a syntax-directed editor for any given
+programming language, given a specification of its syntax in the form
+of an attribute grammar. Around the same time, Donzeau-Gouge et
 al. developed the Mentor programming environment
 \cite{10.5555/800054.801990} that involved a command language, Mentol,
 and allowed designers to specify language-specific specializations
@@ -244,17 +246,19 @@ However, existing editor calculi do not account for context-sensitive
 aspects of program syntax, and notably not the binding 
 mechanisms that are prominent in abstract syntax.
 
-Moreover, the work so far has been dependent on the syntax of the
-programming language that the editor must support. Whenever the
-programming language changes, the type safety results for the editor
-calculus have had to be proved anew. An example of this is the work by
-Andersen et al \cite{10.1145/3587216.3587221} on extending the editor
-calculus of \cite{type_safe_structure_editor} with let-declarations;
-the authors had to provide an entire new proof of the soundness of the
-revised type system.
+Moreover, the work on editor calculi has so far been dependent on the
+syntax of the programming language that the editor must
+support. Whenever the programming language changes, the type soundness
+results for the editor calculus have to be proved anew. An example of
+this is the work by Andersen et al \cite{10.1145/3587216.3587221} on
+extending the editor calculus of \cite{type_safe_structure_editor}
+with let-declarations; the authors had to provide an entire new proof
+of the soundness of the revised type system.
 
 In this paper we propose a generalized editor calculus that deals with
-these two issues.
+these two issues and show how one can use this general framework to
+devise an implementation that can generate an editor from a language
+specification. 
 
 Our calculus deals with binding mechanisms by using notions from
 higher-order abstract syntax \cite{hoas}. Moreover, and importantly,
@@ -272,10 +276,10 @@ calculus by \cite{type_safe_structure_editor}.
 
 \subsection{Representing abstract syntax, cursors and holes}
 
-Following Harper \cite{harper_foundations}, we assume that any
-abstract syntax is given by a set of \emph{sorts} $\SORT$, an
-arity-indexed family of \emph{operators} $\OP$ and a sort-indexed
-family of variables $\VAR$.
+Following Harper \cite{harper_foundations}, we assume that an abstract
+syntax is given by a set of \emph{sorts} $\SORT$, an arity-indexed
+family of \emph{operators} $\OP$ and a sort-indexed family of
+variables $\VAR$.
 
 The notions of \emph{cursors} and \emph{holes} are central to the idea
 of an editor calculus. The cursor represents the point in an abstract
@@ -1142,34 +1146,62 @@ type-safe.
 
 \section{Implementation}
 
+We now describe an implementation of a generic editor based on our
+encoding.
+
 \subsection{Example languages}
-Since the implementation will propose a generic editor, it is crucial to provide a meaningful set of concrete examples, demonstrating that the solution is indeed generic and can be used for any language.
-This section will attempt to provide a meaningful set of concrete examples in a non-biased manner, with languages (or subsets thereof) of different paradigms and purposes.
+
+Since our implementation will propose a generic editor, it is crucial
+to provide a meaningful set of concrete examples, demonstrating that
+the solution is indeed of a general nature.  % This section will attempt
+% to provide a meaningful set of concrete examples with languages (or
+% subsets thereof) of different paradigms and purposes.
  
-The set of examples should contain one or more popular general-purpose programming languages.
-All examples should have a clear syntactic distinction, to exclude dialects of the same language and otherwise very similar languages. \\ GitHub provides a top 30 ranking\cite{prog-lang-metrics} by number of unique \texttt{git} pushes with a given programming language on their platform, and this project will consider entries in the chart of popular character.
+% GitHub provides a top 30 ranking\cite{prog-lang-metrics} by number of unique \texttt{git} pushes with a given programming language on their platform, and this project will consider entries in the chart of popular character.
 
-Usage of the editor is not limited to programming languages, hence the set of examples should also contain one or more domain-specific languages and markup languages suitable for structure editing, in the sense that it contains declarations and binders.
+Usage of the editor is not to to limited to programming languages,
+hence the set of examples should also contain one or more
+domain-specific languages and markup languages suitable for structure
+editing, in the sense that it contains declarations and binders.
 
-Based on prior criteria, the thesis about the implementation\cite{sunemsc} provides examples for subsets of the following languages:
-\begin{itemize}
-    \item C\cite{c-iso-standard}
-    \item SQL\cite{postgresql-about}
-    \item \LaTeX\cite{latex-about}
-\end{itemize}
-Whereas this paper will provide examples only for SQL.
+Based on prior criteria, the thesis about the
+implementation\cite{sunemsc} provides examples for subsets of C
+\cite{c-iso-standard}, SQL\cite{postgresql-about} and
+\LaTeX\cite{latex-about}. In the following we focus on SQL.
 
-\subsection{Representing Syntax}
-The generalized editor calculus assumes that it is given an abstract syntax that is represented by a set of sorts $\mathcal{S}$, an arity-indexed family of operators $\mathcal{O}$, and a sort-indexed family of variables $\mathcal{X}$, as per Robert Harper's notation \cite{harper_foundations}.
+% \subsection{Representing Syntax}
 
-It can be a challenge from the user's perspective to provide a specification based on what the calculus assumes. Therefore, it is ideal for the implementation to provide other means of describing the syntax of a language.
+% The generalized editor calculus assumes that it is given an abstract
+% syntax that is represented by a set of sorts $\mathcal{S}$, an
+% arity-indexed family of operators $\mathcal{O}$, and a sort-indexed
+% family of variables $\mathcal{X}$, as per Robert Harper's notation
+% \cite{harper_foundations}. 
 
-Earlier examples specification languages do not have binding mechanisms in abstract syntax, which is a core feature of the generalized editor calculus. This motivates another possibility of defining a specification language for the generalized editor itself, which can assist the user in describing the syntax. This would also require a parser that can parse the necessary information assumed by the calculus (including binders).
+% It can be a challenge from the user's perspective to provide a
+% specification based on what the calculus assumes. Therefore, it is
+% ideal for the implementation to provide other means of describing the
+% syntax of a language. 
 
-\subsubsection{Specification language}
+\subsubsection{The specification language}
 
-The specification language is chosen to expect some syntactic categories followed by concrete and abstract syntax in BNF notation.  %Every operator from the abstract syntax is represented by one or more non-terminals in the concrete syntax.
-Every syntactic category is represented by one or more non-terminals with a term, arity and operator name. The term might refer to other syntactic categories or its own. Each term is the concrete syntax of an operator, while the arity, in combination with the operator name, is a concise representation of the abstract syntax of an operator.
+The specification language is chosen to expect some syntactic
+categories followed by concrete and abstract syntax given in BNF notation.
+% Every operator from the abstract syntax is represented by one or
+% more non-terminals in the concrete syntax.
+
+Earlier examples of specification languages do not have binding
+mechanisms in abstract syntax, which is a core feature of the
+generalized editor calculus. This motivates another possibility of
+defining a specification language for the generalized editor itself,
+which can assist the user in describing the syntax. This would also
+require a parser that can parse the necessary information assumed by
+the calculus (including binders).
+
+Every syntactic category is represented by one or more non-terminals
+with a term, arity and operator name. The term might refer to other
+syntactic categories or its own. Each term is the concrete syntax of
+an operator, while the arity, in combination with the operator name,
+is a concise representation of the abstract syntax of an operator. 
 The abstract syntax only makes use of the defined syntactic categories and, inspired by Harper\cite{harper_foundations}, binders can be specified in the arity description with a dot ('.'), e.g. $x.s$ specifies that variable $x$ is bound within the scope of $s$.
 
 Meta-variables can be represented in the concrete syntax (term) with a percentage sign ('\%') followed by a string, e.g. '\%int' represents any integer. The operator
