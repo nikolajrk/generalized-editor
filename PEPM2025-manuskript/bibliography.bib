@@ -33,9 +33,10 @@ numpages = {11},
 keywords = {programming environment, diagnostic interpreter, source language debugger, syntax-directed editor, program development system, template}
 }
 
+
 @inproceedings{10.1145/800020.808247,
 author = {Reps, Thomas and Teitelbaum, Tim},
-title = {The Synthesizer Generator},
+title = {The synthesizer generator},
 year = {1984},
 isbn = {0897911318},
 publisher = {Association for Computing Machinery},
@@ -51,7 +52,7 @@ series = {SDE 1}
 
 @article{10.1145/390010.808247,
 author = {Reps, Thomas and Teitelbaum, Tim},
-title = {The Synthesizer Generator},
+title = {The synthesizer generator},
 year = {1984},
 issue_date = {May 1984},
 publisher = {Association for Computing Machinery},
@@ -63,14 +64,14 @@ url = {https://doi.org/10.1145/390010.808247},
 doi = {10.1145/390010.808247},
 abstract = {Programs are hierarchical compositions of formulae satisfying structural and extra-structural relationships. A program editor can use knowledge of such relationships to detect and provide immediate feedback about violations of them. The Synthesizer Generator is a tool for creating such editors from language descriptions. An editor designer specifies the desired relationships and the feedback to be given when they are violated, as well as a user interface; from the specification, the Synthesizer Generator creates a full-screen editor for manipulating programs in the language.},
 journal = {SIGSOFT Softw. Eng. Notes},
-month = {apr},
+month = apr,
 pages = {42–48},
 numpages = {7}
 }
 
 @article{10.1145/390011.808247,
 author = {Reps, Thomas and Teitelbaum, Tim},
-title = {The Synthesizer Generator},
+title = {The synthesizer generator},
 year = {1984},
 issue_date = {May 1984},
 publisher = {Association for Computing Machinery},
@@ -82,10 +83,11 @@ url = {https://doi.org/10.1145/390011.808247},
 doi = {10.1145/390011.808247},
 abstract = {Programs are hierarchical compositions of formulae satisfying structural and extra-structural relationships. A program editor can use knowledge of such relationships to detect and provide immediate feedback about violations of them. The Synthesizer Generator is a tool for creating such editors from language descriptions. An editor designer specifies the desired relationships and the feedback to be given when they are violated, as well as a user interface; from the specification, the Synthesizer Generator creates a full-screen editor for manipulating programs in the language.},
 journal = {SIGPLAN Not.},
-month = {apr},
+month = apr,
 pages = {42–48},
 numpages = {7}
 }
+
 
 @inproceedings{10.1145/3587216.3587221,
 author = {H\"{u}ttel, Hans and Elisasen Lumholtz Nielsen, Anja and Gjerulf Sandberg, Nana and Lind Andersen, Christoffer and Mikkelsen, Peter},
@@ -157,9 +159,27 @@ author={Hüttel, Hans},
 year={2010}
 }
 
-@article{hazelnut,
+@inproceedings{hazelnut,
 author = {Omar, Cyrus and Voysey, Ian and Hilton, Michael and Aldrich, Jonathan and Hammer, Matthew A.},
-title = {Hazelnut: A Bidirectionally Typed Structure Editor Calculus},
+title = {Hazelnut: a bidirectionally typed structure editor calculus},
+year = {2017},
+isbn = {9781450346603},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3009837.3009900},
+doi = {10.1145/3009837.3009900},
+abstract = {Structure editors allow programmers to edit the tree structure of a program directly. This can have cognitive benefits, particularly for novice and end-user programmers. It also simplifies matters for tool designers, because they do not need to contend with malformed program text. This paper introduces Hazelnut, a structure editor based on a small bidirectionally typed lambda calculus extended with holes and a cursor. Hazelnut goes one step beyond syntactic well-formedness: its edit actions operate over statically meaningful incomplete terms. Na\"{\i}vely, this would force the programmer to construct terms in a rigid "outside-in" manner. To avoid this problem, the action semantics automatically places terms assigned a type that is inconsistent with the expected type inside a hole. This meaningfully defers the type consistency check until the term inside the hole is finished. Hazelnut is not intended as an end-user tool itself. Instead, it serves as a foundational account of typed structure editing. To that end, we describe how Hazelnut's rich metatheory, which we have mechanized using the Agda proof assistant, serves as a guide when we extend the calculus to include binary sum types. We also discuss various interpretations of holes, and in so doing reveal connections with gradual typing and contextual modal type theory, the Curry-Howard interpretation of contextual modal logic. Finally, we discuss how Hazelnut's semantics lends itself to implementation as an event-based functional reactive program. Our simple reference implementation is written using js_of_ocaml.},
+booktitle = {Proceedings of the 44th ACM SIGPLAN Symposium on Principles of Programming Languages},
+pages = {86–99},
+numpages = {14},
+keywords = {structure editors, mechanized metatheory, gradual typing, bidirectional type systems},
+location = {Paris, France},
+series = {POPL '17}
+}
+
+@article{10.1145/3093333.3009900,
+author = {Omar, Cyrus and Voysey, Ian and Hilton, Michael and Aldrich, Jonathan and Hammer, Matthew A.},
+title = {Hazelnut: a bidirectionally typed structure editor calculus},
 year = {2017},
 issue_date = {January 2017},
 publisher = {Association for Computing Machinery},
@@ -171,11 +191,13 @@ url = {https://doi.org/10.1145/3093333.3009900},
 doi = {10.1145/3093333.3009900},
 abstract = {Structure editors allow programmers to edit the tree structure of a program directly. This can have cognitive benefits, particularly for novice and end-user programmers. It also simplifies matters for tool designers, because they do not need to contend with malformed program text. This paper introduces Hazelnut, a structure editor based on a small bidirectionally typed lambda calculus extended with holes and a cursor. Hazelnut goes one step beyond syntactic well-formedness: its edit actions operate over statically meaningful incomplete terms. Na\"{\i}vely, this would force the programmer to construct terms in a rigid "outside-in" manner. To avoid this problem, the action semantics automatically places terms assigned a type that is inconsistent with the expected type inside a hole. This meaningfully defers the type consistency check until the term inside the hole is finished. Hazelnut is not intended as an end-user tool itself. Instead, it serves as a foundational account of typed structure editing. To that end, we describe how Hazelnut's rich metatheory, which we have mechanized using the Agda proof assistant, serves as a guide when we extend the calculus to include binary sum types. We also discuss various interpretations of holes, and in so doing reveal connections with gradual typing and contextual modal type theory, the Curry-Howard interpretation of contextual modal logic. Finally, we discuss how Hazelnut's semantics lends itself to implementation as an event-based functional reactive program. Our simple reference implementation is written using js_of_ocaml.},
 journal = {SIGPLAN Not.},
-month = {jan},
+month = jan,
 pages = {86–99},
 numpages = {14},
-keywords = {bidirectional type systems, gradual typing, structure editors, mechanized metatheory}
+keywords = {structure editors, mechanized metatheory, gradual typing, bidirectional type systems}
 }
+
+
 
 @InCollection{stanford-lambda-calculus,
 	author       =	{Alama, Jesse and Korbmacher, Johannes},
@@ -392,4 +414,19 @@ numpages = {16},
 keywords = {grammars, structured editing, text-like editing},
 location = {Hamburg, Germany},
 series = {CHI '23}
+}
+
+@article{CAIRES2003194,
+title = {A spatial logic for concurrency (part I)},
+journal = {Information and Computation},
+volume = {186},
+number = {2},
+pages = {194-235},
+year = {2003},
+note = {Theoretical Aspects of Computer Software (TACS 2001)},
+issn = {0890-5401},
+doi = {https://doi.org/10.1016/S0890-5401(03)00137-8},
+url = {https://www.sciencedirect.com/science/article/pii/S0890540103001378},
+author = {Luis Caires and Luca Cardelli},
+abstract = {We present a logic that can express properties of freshness, secrecy, structure, and behavior of concurrent systems. In addition to standard logical and temporal operators, our logic includes spatial operations corresponding to composition, local name restriction, and a primitive fresh name quantifier. Properties can also be defined by recursion; a central aim of this paper is then the combination of a logical notion of freshness with inductive and coinductive definitions of properties.}
 }

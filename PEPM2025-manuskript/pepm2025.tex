@@ -208,7 +208,7 @@ context-free parsing. A prominent early example of an editor of this
 kind is that of the Cornell Program Synthesizer by Reps and Teitelbaum
 \cite{10.1145/358746.358755}, designed with the PL/I language in mind.
 
-Reps and Teitelbaum also demonstrated \cite{10.1145/390011.808247} how
+Reps and Teitelbaum also demonstrated \cite{10.1145/390010.808247} how
 one can generalize their original work to build a Synthesizer
 Generator that will create a syntax-directed editor for any given
 programming language, given a specification of its syntax in the form
@@ -297,7 +297,10 @@ as the smallest family that satisfies the conditions of $\ABT{}$'s in
 \cite{harper_foundations}.
 
 We let $\hole{s}$ denote holes that can be replaced by terms of sort
-$s$ and let $[e]$ note a cursor placed over the term $e$.
+$s$ and let $[e]$ note a cursor placed over the term $e$. Following
+Harper \cite{harper_foundations}, write $s_1.s_2$ to denote that an
+argument of an operator has sort $s_2$ and involves a binder of sort
+$s_1$.
 
 \begin{example}\label{ex:abstract_syntax}
 Consider the following simple language of expressions with the binding
@@ -630,7 +633,7 @@ The modality $@o$ holds for an \abt $a$ if the cursor is at the root of
 $a$ and the root is the operator $o$. 
 
 The modality $\Diamond o$ is satisfied for $a$ when the operator $o$ is
-anywhere within $a$. The modality
+found somewhere within $a$. The modality
 $\square o$ holds for $a$ when $o$ is found in every subtree of the
 ABT encapsulated by the cursor. 
 
@@ -690,7 +693,7 @@ To encode the abstract binding trees, the simply typed lambda calculus
 suffices, so for an \abt $a$ its encoding $\encode{a}$ is a term in
 $\stlc$.
 
-In order to encode ABTs with cursors and expressions of the
+In order to encode {\abt}s with cursors and expressions of the
 generalized editor calculus, we extend \stlc with more constructs.
 
 To represent contexts, we introduce pairs. To encode atomic prefix
@@ -769,7 +772,7 @@ its arity.
 }
 
 With the operators added as term constants and sorts added as base
-types, encoding ABTs is straightforward as we just have to curry the
+types, encoding an {\abt} is straightforward as we just have to curry the
 operator $o$, encode the children $a_1, \dots, a_n$ and add
 typings. This can be seen on \cref{fig:enc_abt}. 
 
@@ -829,12 +832,12 @@ typings. This can be seen on \cref{fig:enc_abt}.
     }
     
 \end{example}
-
-for example, if we were to encode the statement:
+%
+The statement:
 \begin{equation*}
         \text{let $x=[\hole{e}]$ in $x+5$}
     \end{equation*}
-    it could be encoded as:
+will be encoded as
     \begin{align*} 
         \text{let} \ (\text{cursor}_e(\text{hole}_e)) \ (\lambda x . \text{plus} \ \text{var}[x] \ \text{num}[5])
   \end{align*}
@@ -844,7 +847,7 @@ for example, if we were to encode the statement:
 
 \subsection{Cursor contexts}\label{sec:enc_cursor_contexts}
 
-To represent ABTs with cursor contexts we introduce the pair construct similarly to \cite{types_programming_languages}.
+To represent {\abt}s with cursor contexts we introduce the pair construct similarly to \cite{types_programming_languages}.
 %In \cref{fig:abt_cursor_syntactic_forms} we introduce the new syntactic forms which include the pair construct, first projection, second projection and the product type. 
 %\federeboks{R C L l}{
 %    \multicolumn{4}{c}{Terms}
@@ -915,8 +918,8 @@ shown below; $p$ is the metavariable for patterns.
 %} {\caption{Abstract syntax for representing atomic prefix commands, extending the lambda-calculus with a match construct.}\label{fig:apc_syntactic_forms}}
 %The reduction rules for the match construct can be seen in the full version of the paper.
 %
-We are now able to define functions functions that describe navigation
-in an \abt and substitution; the definitions are givren in
+We are now able to define functions that describe navigation in an
+\abt and substitution; the definitions are given in
 \cref{tab:zip_oper}. We introduce the abbreviation $[a]$ to mean the
 cursor operator with the child $a$.
 
@@ -957,9 +960,12 @@ recursively. \textit{parent} and \textit{insert} are simply encoded as \textit{u
 \subsection{Control structures and modal logic}
 
 To encode control structures and modal logic, we must introduce
-recursion and the $Bool$ base type. We introduce the \fix operator as
-seen in \cite{types_programming_languages}, as well as boolean types
-and values.
+recursion and the $Bool$ base type. The combination of a next-step
+modality and recursion allows us to encode the eventuality modality
+$\Diamond$ following the idea of Caires and Cardelli
+\cite{CAIRES2003194}. We introduce the \fix operator as seen in
+\cite{types_programming_languages}, as well as boolean types and
+values.
 
 \cref{fig:edt_enc} shows the encoding of editor expressions. For
 atomic prefixes the atomic prefix command is applied before the
@@ -1291,7 +1297,7 @@ type Id
 
   The $Bind$ type alias is simply a tuple of 2 given type variables,
   where the first element is a list. This is used to represent binders in the
-  abstract syntax, however with the limitation of only allowing ABTs of a single
+  abstract syntax, however with the limitation of only allowing {\abt}s of a single
   sort to be bound.
 \end{example}
 
@@ -1391,14 +1397,14 @@ data types, representing {\abt}'s in the editor.
 
 \subsubsection{Decomposing trees}
 
-All editor expressions assume a well-formed ABT, which is a tree
+All editor expressions assume a well-formed \abt, which is a tree
 with exactly one cursor, which cannot be guaranteed by the generated
 algebraic data types for sorts $\mathcal{O}$, as every sort has an associated cursor operator.
 
-However, operations from the editor calculus rely on a well-formed ABT, which is given
+However, operations from the editor calculus rely on a well-formed \abt, which is given
 by decomposing an \abt $a$ into $C[\dot{a}]$, where $C$ is a
 cursor-context and $\dot{a}$ is a
-well-formed ABT.
+well-formed \abt.
 
 First, it is necessary to know which symbol in the given syntax representation
 is intended as the starting symbol. Only the syntactic category of the starting symbol
@@ -1651,10 +1657,10 @@ syntax, and describe how to encode it into a monomorphic typed lambda
 calculus with pairs, recursion and pattern matching. The encoding is
 sound, and as a consequence, given that the type system of the
 extended lambda calculus is sound, it follows that our editor calculus
-is typesafe.
+is type safe.
 
 Further work on our generalized editor calculus is to prove whether
-the encoding is complete.  A next, important next step is to
+the encoding is complete.  An important next step is to
 incorporate a copy-paste operation since this is a central notion in
 editing. Here, the question arises as to how to best deal with pasting
 terms that include free variables. In some settings, when editing
