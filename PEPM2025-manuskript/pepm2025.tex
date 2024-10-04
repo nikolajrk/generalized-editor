@@ -956,11 +956,10 @@ recursively. \textit{parent} and \textit{insert} are simply encoded as \textit{u
 
 \subsection{Control structures and modal logic}
 
-To encode control structures and modal logic, we need to further
-extend the lambda-calculus with a \fix operator as well as the $Bool$
-base type. We introduce the \fix operator as seen in
-\cite{types_programming_languages}, as well as boolean types and
-values.
+To encode control structures and modal logic, we must introduce
+recursion and the $Bool$ base type. We introduce the \fix operator as
+seen in \cite{types_programming_languages}, as well as boolean types
+and values.
 
 \cref{fig:edt_enc} shows the encoding of editor expressions. For
 atomic prefixes the atomic prefix command is applied before the
@@ -986,10 +985,6 @@ of $E_1$ or $E_2$ on $C$ accordingly.
 %    \tau & ::= & \text{Bool} & (boolean)
 %}{\caption{Abstract syntax for control structures and modal logic, extending the calculus with the \fix operator and boolean types and term constants.}\label{fig:control_syntactic_forms}}
 
-
-%In \cref{fig:cond_aux} we define auxiliary functions that will help with the encoding of conditional expressions. The auxiliary functions $and$, $or$ and $neg$ function as their name would suggest. In our semantics, when checking if a formula $\phi$ holds, we do so against an \abt $a$ (i.e $a \vDash \phi$). When constructing the proof tree for such a formula we see that this \abt $a$ is propagated up through the proof tree, thus we need to have the ability to propagate an \abt throughout our encoded formula as well. To propagate this \abt through $and$, $or$ and $neg$ we define the combinators $phoenix$ (liftA2/liftM2 in Haskell) and $bluebird$ (function composition / B combinator).  
-
-
 \federeboks{C C}{
     \encode{\pi.E} = \lambda C:\text{Ctx}.\encode{E} ( (\encode{\pi} \ C.1) \ , C.2) 
     \\[2mm]
@@ -1010,6 +1005,7 @@ of $E_1$ or $E_2$ on $C$ accordingly.
 }
 
 \iffalse
+In \cref{fig:cond_aux} we define auxiliary functions that will help with the encoding of conditional expressions. The auxiliary functions $and$, $or$ and $neg$ function as their name would suggest. In our semantics, when checking if a formula $\phi$ holds, we do so against an \abt $a$ (i.e $a \vDash \phi$). When constructing the proof tree for such a formula we see that this \abt $a$ is propagated up through the proof tree, thus we need to have the ability to propagate an \abt throughout our encoded formula as well. To propagate this \abt through $and$, $or$ and $neg$ we define the combinators $phoenix$ (liftA2/liftM2 in Haskell) and $bluebird$ (function composition / B combinator).  
 \federeboks{L C L}{
     \text{phoenix} &\define& \lambda f: (\text{Bool} \to \text{Bool} \to \text{Bool}). \\
             &       & \lambda g: (s \to \text{Bool}). \\
@@ -1050,9 +1046,9 @@ of $E_1$ or $E_2$ on $C$ accordingly.
         & |     & \top \to \bot \\
         & |     & \bot \to \top
 }{
-    \caption{Function definitions for auxiliary functions.}
-    \label{fig:cond_aux}
-}
+    \caption{Function definitions for auxiliary functions.}\label{fig:cond_aux}
+  }
+  
 The encoding of propositional connectives is shown in
 \cref{fig:encoding_connectives}.
 
@@ -1091,28 +1087,31 @@ $\square o$ consists of either applying $\Diamond o$ on all the children of the 
 \fi
 
 
-% \begin{example}
-%     We are now able to give an example of how to encode editor
-%     expressions. Consider
-%     \begin{equation*}
-%         \text{child\ $2$.nil $\ggg$ parent.nil}
-%     \end{equation*}
-%     using the encoding rules seen on \cref{fig:edt_enc} and \cref{fig:atc_enc}. For readability purposes we will not add explicit typings, just note that any variable $C_i$ has type $Ctx$.
-%     \begin{align*}
-%          &\ \encode{\text{child\ $2$.nil $\ggg$ parent.nil}} \\
-%          =&\ \lambda C_1 . \encode{\text{parent.nil}} (\encode{\text{child\ $2$.nil}} C_1) \\
-%          =&\ \lambda C_1 . (\lambda C_2 . \encode{\nil }(\encode{\parnt} C_2.1, C_2.2)) (\encode{\text{child\ $2$.nil}} C_1) \\
-%          =&\ \lambda C_1 . (\lambda C_2 . \encode{nil}(up\ C_2.1, C_2.2)) (\encode{child\ 2.nil} C_1) \\
-%          =&\ \lambda C_1 . (\lambda C_2 . (\lambda C_3 . C_3)(up\ C_2.1, C_2.2)) (\encode{child\ 2.nil} C_1) \\
-%          \betar&\ \lambda C_1 . (\lambda C_2 . (up\ C_2.1, C_2.2)) (\encode{child\ 2.nil} C_1) \\
-%          =&\ \lambda C_1 . (\lambda C_2 . (up\ C_2.1, C_2.2)) (\lambda C_3 . \encode{nil} (\encode{child\ 2} C_3.1, C_3.2)C_1) \\
-%          =&\ \lambda C_1 . (\lambda C_2 . (up\ C_2.1, C_2.2)) (\lambda C_3 . (\lambda C_4.C_4) (\encode{child\ 2} C_3.1, C_3.2)C_1) \\
-%          \betar&\ \lambda C_1 . (\lambda C_2 . (up\ C_2.1, C_2.2)) (\lambda C_3 . (\encode{child\ 2} C_3.1, C_3.2)C_1) \\
-%          =&\ \lambda C_1 . (\lambda C_2 . (up\ C_2.1, C_2.2)) (\lambda C_3 . right (\encode{child\ 1} (C_3.1, C_3.2))C_1) \\
-%          =&\ \lambda C_1 . (\lambda C_2 . (up\ C_2.1, C_2.2)) (\lambda C_3 . right (down (C_3.1, C_3.2))C_1) \\
-%     \end{align*}
-%     As can be seen, the editor expression could be fully encoded to the extended lambda calculus. We refer to the full paper for
-% \end{example}
+\begin{example}
+    We are now able to give an example of how to encode editor
+    expressions. Consider
+    \begin{equation*}
+        \text{child\ $2$.nil $\ggg$ parent.nil}
+    \end{equation*}
+    using the encoding rules seen on \cref{fig:edt_enc} and
+    \cref{fig:atc_enc}. For readability purposes we omit explicit
+    typings;  any variable $C_i$ has type $Ctx$.
+    \begin{small}
+    \begin{align*}
+         &\ \encode{\text{child\ $2$.nil $\ggg$ parent.nil}} \\
+         =&\ \lambda C_1 . \encode{\text{parent.nil}} (\encode{\text{child\ $2$.nil}} C_1) \\
+         =&\ \lambda C_1 . (\lambda C_2 . \encode{\nil }(\encode{\parnt} C_2.1, C_2.2)) (\encode{\text{child\ $2$.nil}} C_1) \\
+         =&\ \lambda C_1 . (\lambda C_2 . \encode{nil}(up\ C_2.1, C_2.2)) (\encode{child\ 2.nil} C_1) \\
+         =&\ \lambda C_1 . (\lambda C_2 . (\lambda C_3 . C_3)(up\ C_2.1, C_2.2)) (\encode{child\ 2.nil} C_1) \\
+         \betar&\ \lambda C_1 . (\lambda C_2 . (up\ C_2.1, C_2.2)) (\encode{child\ 2.nil} C_1) \\
+         =&\ \lambda C_1 . (\lambda C_2 . (up\ C_2.1, C_2.2)) (\lambda C_3 . \encode{nil} (\encode{child\ 2} C_3.1, C_3.2)C_1) \\
+         =&\ \lambda C_1 . (\lambda C_2 . (up\ C_2.1, C_2.2)) (\lambda C_3 . (\lambda C_4.C_4) (\encode{child\ 2} C_3.1, C_3.2)C_1) \\
+         \betar&\ \lambda C_1 . (\lambda C_2 . (up\ C_2.1, C_2.2)) (\lambda C_3 . (\encode{child\ 2} C_3.1, C_3.2)C_1) \\
+         =&\ \lambda C_1 . (\lambda C_2 . (up\ C_2.1, C_2.2)) (\lambda C_3 . right (\encode{child\ 1} (C_3.1, C_3.2))C_1) \\
+         =&\ \lambda C_1 . (\lambda C_2 . (up\ C_2.1, C_2.2)) (\lambda C_3 . right (down (C_3.1, C_3.2))C_1) \\
+    \end{align*}
+    \end{small}
+\end{example}
 
 \subsection{Encoding configurations}
 
