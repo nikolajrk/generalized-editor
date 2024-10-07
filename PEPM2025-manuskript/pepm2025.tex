@@ -1592,6 +1592,61 @@ can be connected with logical operators, forming the operators \texttt{Negation}
 
 With the current state of the implementation, it is only possible to query for a given conditional expression $\phi$, which will return wether that condtion holds. The rest is yet to be implemented.
 
+\begin{example}\label{ex:sql-repl}
+An editing session inside a generated instance of the SQL editor in an Elm REPL is
+shown in \cref{lst:SQL-repl}. The sample tree consists of a SQL query
+selecting every column from a table called "table-b" where the the value in
+"col-a" is greater than 2. For the purpose of demonstration, this sample
+has no cursor, showing that the decomposition of the tree will result in a
+cursor context containing only the context hole and a well-formed tree
+with the cursor at the root of the tree. Attempting to move the cursor to the
+parent will result in \texttt{Nothing} (empty value of the \texttt{Maybe} option type in Elm),
+as the cursor is already at the root
+of the tree. Moving the cursor to child 1 moves the cursor to the first child
+of the \texttt{Select} operator, as expected. Simple substitution
+is shown where the cursor is encapsulating the root of tree, resulting
+in the substitute being the only element under the updated cursor.
+Finally, simple conditions are queried, such as if the cursor is encapsulating
+a \texttt{Q\_CLess} operator, and if a \texttt{Const\_CLess} operator exists in
+the encapsulated subtree.
+
+
+\begin{lstlisting}[style=inline, language=elm, caption={SQL editor session in an Elm REPL}, label={lst:SQL-repl}]
+> example = Q (Select (Ident "col-a") (Ident "table-b") (Where (Greater (Eident (Ident "col-a")) (Econst (Num 2)))))
+Q (Select (Ident "col-a") (Ident "table-b") (Where (Greater (Eident (Ident "col-a")) (Econst (Num 2)))))
+    : Base
+
+> decomposed = decompose example
+(Cctx_hole,Root_q_CLess (Select_CLess (Ident_CLess "col-a") (Ident_CLess "table-b") (Where_CLess (Greater_CLess (Eident_CLess (Ident_CLess "col-a")) (Econst_CLess (Num_CLess 2))))))
+    : ( Cctx, Wellformed )
+
+> new = parent decomposed
+Nothing : Maybe ( Cctx, Wellformed )
+
+> child 1 decomposed
+Just (Select_CLess_cctx1 Cctx_hole (Ident_CLess "table-b") (Where_CLess (Greater_CLess (Eident_CLess (Ident_CLess "col-a")) (Econst_CLess (Num_CLess 2)))),Root_id_CLess (Ident_CLess "col-a"))
+    : Maybe ( Cctx, Wellformed )
+
+> substitute decomposed (Q_CLess Hole_q_CLess)
+Just (Cctx_hole,Root_q_CLess Hole_q_CLess)
+    : Maybe ( Cctx, Wellformed )
+
+> evalCond decomposed <| At <| Q_CLess <| Select_CLess Hole_id_CLess Hole_id_CLess Hole_clause_CLess
+True : Bool
+
+> evalCond decomposed <| Neg <| At <| Q_CLess <| Select_CLess Hole_id_CLess Hole_id_CLess Hole_clause_CLess
+False : Bool
+
+> evalCond decomposed <| Possibly <| Const_CLess <| Num_CLess 1
+True : Bool
+
+> evalCond decomposed <| Necessarily <| Const_CLess <| Num_CLess 1
+True : Bool
+
+\end{lstlisting}
+
+\end{example}
+
 \subsubsection{Generic implementation}
 Given the generic nature of the editor calculus, the implementation could
 benefit from type classes, which would allow for more general functions
@@ -1616,7 +1671,6 @@ in \cref{lst:elm-typeclass}.  This approach has the disadvantage of
 forcing an explicit reference to the typeclass "instance" in a generic
 function, in contrast to Haskell.
 
-% TODO: replace this with a more interesting example, i.e. conditionals
 \begin{lstlisting}[language=Haskell,style=inline,caption={Haskell typeclass example},label={lst:haskell-typeclass}]
 class Substitutable a where 
     substitute :: a -> a -> a
