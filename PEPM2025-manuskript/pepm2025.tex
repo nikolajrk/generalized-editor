@@ -209,7 +209,7 @@ kind is that of the Cornell Program Synthesizer by Reps and Teitelbaum
 \cite{10.1145/358746.358755}, designed with the PL/I language in mind.
 
 Reps and Teitelbaum also demonstrated \cite{10.1145/390010.808247} how
-one can generalize their original work to build a Synthesizer
+one can generalize the Program Synthesizer to build a Synthesizer
 Generator that will create a syntax-directed editor for any given
 programming language, given a specification of its syntax in the form
 of an attribute grammar. Around the same time, Donzeau-Gouge et
@@ -343,9 +343,8 @@ construct of local declarations.
 \end{example}
 
 \subsection{The editor calculus}
-Editor expressions $E \in \Edt$, where $\Edt$ is the sort of editor
-expressions, describe the possible edit actions. The formation rules
-are given below.
+The formation rules for editor expressions $E \in \Edt$, where $\Edt$ is the sort of editor
+expressions, are given below.
 %
 \begin{align*}
   E & ::= & \pi.E  \mid  \phi => E_1|E_2  \mid  E_1 \ggg E_2  \mid  \rec  \ x.E  \mid  x  \mid  \nil  \\
@@ -353,14 +352,28 @@ are given below.
     \phi & ::= & \neg\phi  \mid  \phi_1 \wedge \phi_2  \mid  \phi_1 \vee \phi_2  \mid  @o  \mid  \Diamond o  \mid  \square o
 \end{align*}
 %
-Evaluation of {\abt}'s, which \cite{type_safe_structure_editor}
-introduces through an \textsf{eval} construct, is not included in our
-generalized version. This omission is due to evaluation being entirely
-dependent on the dynamics of the language in focus, and not the static
-and structural properties the abstract syntax describes. To define the
-concept of evaluation in a generalized manner, it would be necessary
-to devise a formal and concise approach for specifying the semantics
-of operators.
+Expressions describe the possible edit actions. Edit expressions can
+be built using prefixed expressions of the form $\pi.E$. This
+evaluates $\pi$ before continuing with $E$. A prefix allows for
+navigation downwards in an \abt ($\chld \ n$) and upwards ($\parnt$)
+and for inserting an operator $\{ o \}$. The conditional expression
+$\phi => E_1|E_2$ reduces to $E_1$ if $\phi$ is satisfied and $E_2$
+otherwise. Conditions $\phi$ are interpreted relative to the position
+of the cursor. Conditions are expressed using a spatial logic
+\cite{CAIRES2003194} that allows us to require that an operator $o$ is
+present ($@o$) and are built using propositional connectives, the
+"somewhere below'' modality $\Diamond$ and the "everywhere below''
+modality $\square$. The sequential expression $E_1 \ggg E_2$ evaluates
+$E_2$ only once $E_1$ has been reduced to $nil$. The recursive
+expression $rec \ x.E$ binds the recursion variable $x$ in $E$, which
+can then be used to recursively iterate an expression.
+
+The original editor calculus \cite{type_safe_structure_editor}
+introduces an \textsf{eval} construct that allows the edit action to
+compute the value of the program being edited. This is not included in
+our generalized version, as this is entirely dependent on the
+semantics of the programming language under consideration and
+therefore cannot be defined in a generalized manner.
 
 \begin{example}\label{ex:editor_calculus}
     We can define a version of the editor calculus for
@@ -416,14 +429,7 @@ $Apc$ and the silent transition $\epsilon$. The transition relation
 $\Rightarrow$ is defined by the rules shown in
 \cref{fig:editor_expression_rules}. These facilitate ways of composing
 editor expressions together with conditions, sequential composition
-and recursion. The means of traversing and modifying an \abt are
-provided by the prefixed expression $\pi.E$, which evaluates $\pi$
-before continuing with $E$. The conditional expression
-$\phi => E_1|E_2$ reduces to $E_1$ if $\phi$ is satisfied and $E_2$
-otherwise. The sequential expression $E_1 \ggg E_2$ evaluates $E_2$
-only once $E_1$ has been reduced to $nil$. The recursive expression
-$rec \ x.E$ binds the recursion variable $x$ in $E$, which can then be
-used to recursively iterate an expression.
+and recursion. 
 
 \federeboks{c}{
     \infeshort{Cond-1}
