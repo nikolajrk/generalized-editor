@@ -962,6 +962,20 @@ recursively. \textit{parent} and \textit{insert} are simply encoded as \textit{u
     \label{fig:atc_enc}
 }
 
+\begin{lemma}[Soundness of the encoding of prefixes]
+  For any \abt $a$, if there exists a transition
+  %
+  \begin{equation}  a \ltrans{\pi} a' \label{pref-trans} \end{equation}
+  %
+  we have a reduction sequence
+  %
+  \begin{equation} \encode{\pi} \encode{a} \rightarrow^{*}\encode{a'}  \label{enc-pref-trans} \end{equation}
+\end{lemma}
+\begin{proof}
+  A case analysis that for each possible form of $\pi$ shows how to
+  obtain \eqref{enc-pref-trans} given a transition \eqref{pref-trans}.
+\end{proof}
+
 \subsection{Control structures and modal logic}
 
 To encode control structures and modal logic, we must introduce
@@ -1097,6 +1111,19 @@ $@o$ is encoded such that we pattern match on the on the operator $o$, and if th
 $\square o$ consists of either applying $\Diamond o$ on all the children of the tree, or returning true if there are no children.
 \fi
 
+\begin{lemma}[Soundness of the encoding of modal logic]
+  For every \abt $a$ and formula $\phi$, we have that if $a \models
+  \phi$ then we have that
+  \begin{equation}
+    \label{eq:true}
+    \encode{\phi} \encode{a} \rightarrow^{*} \top
+  \end{equation}
+  and if $a \not\models \phi$ we have that
+  \begin{equation}
+    \label{eq:false}
+        \encode{\phi} \encode{a} \rightarrow^{*} \bot
+  \end{equation}
+\end{lemma}
 
 \begin{example}
     We are now able to give an example of how to encode editor
@@ -1164,7 +1191,8 @@ type-safe.
 \section{Implementation}
 
 We now describe an implementation of a generic editor based on our
-encoding.
+encoding in the Elm language, as Elm supports a declarative
+implementation of interactive interfaces directly.
 
 \subsection{Example languages}
 
@@ -1176,13 +1204,12 @@ the solution is indeed of a general nature.  % This section will attempt
  
 % GitHub provides a top 30 ranking\cite{prog-lang-metrics} by number of unique \texttt{git} pushes with a given programming language on their platform, and this project will consider entries in the chart of popular character.
 
-Usage of the editor is not to to limited to programming languages,
-hence the set of examples should also contain one or more
-domain-specific languages and markup languages suitable for structure
-editing, in the sense that it contains declarations and binders.
+Usage of the editor is not limited to programming languages, hence we
+have also considered domain-specific languages and markup languages
+suitable for structure editing, in the sense that they contain
+declarations and binders.
 
-Based on prior criteria, the thesis about the
-implementation\cite{sunemsc} provides examples for subsets of C
+In \cite{sunemsc} we provide examples for subsets of C
 \cite{c-iso-standard}, SQL\cite{postgresql-about} and
 \LaTeX\cite{latex-about}. In the following we focus on SQL.
 
@@ -1700,7 +1727,17 @@ sound, and as a consequence, given that the type system of the
 extended lambda calculus is sound, it follows that our editor calculus
 is type safe.
 
-Further work on our generalized editor calculus is to prove whether
+Based on our encoding we have implemented a type-safe, generalized
+syntax-directed editor in Elm.  The implementation supports basic editing
+functionalities such as cursor movement and substitutions, and
+definitions of subsets of different languages, including C, SQL, and
+\LaTeX, have been examined. While Elm is suitable for building
+interfaces, it has turned out that an implementation that supports the
+general nature of the underlying calculus can be more easily expressed
+in a programming language with type classes such as Haskell. Porting
+the implementation to Haskell is a topic of further work.
+
+Further work on the generalized editor calculus itself is to prove whether
 the encoding is complete.  An important next step is to
 incorporate a copy-paste operation since this is a central notion in
 editing. Here, the question arises as to how to best deal with pasting
