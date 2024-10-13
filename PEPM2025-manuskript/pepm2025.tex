@@ -129,7 +129,7 @@
 \renewcommand{\shortauthors}{Bennetzen et al.}
 
 \begin{abstract}
-  
+
   Editor calculi make it possible to describe the actions of
   syntax-directed editing and provide guarantees of safety through
   their specialized type system: Well-typed editor scripts produce
@@ -143,7 +143,7 @@
   simply typed lambda calculus, extended with pairs, booleans, pattern
   matching and fixed points. This implies a general type safety result
   that holdsfor any instantiation.
-  
+
 \end{abstract}
 
 %%
@@ -243,7 +243,7 @@ will then guarantee that if an editor term $E$ is well-typed, then $E$
 will produce a well-formed program.
 
 However, existing editor calculi do not account for context-sensitive
-aspects of program syntax, and notably not the binding 
+aspects of program syntax, and notably not the binding
 mechanisms that are prominent in abstract syntax.
 
 Moreover, the work on editor calculi has so far been dependent on the
@@ -258,7 +258,7 @@ of the soundness of the revised type system.
 In this paper we propose a generalized editor calculus that deals with
 these two issues and show how one can use this general framework to
 devise an implementation that can generate an editor from a language
-specification. 
+specification.
 
 Our calculus deals with binding mechanisms by using notions from
 higher-order abstract syntax \cite{hoas}. Moreover, and importantly,
@@ -320,7 +320,7 @@ construct of local declarations.
     as the ABT
     \begin{equation*}
         \text{let}(5;x.\text{let}(10;y.\text{exp}(\text{plus}(x;y))))
-    \end{equation*} 
+    \end{equation*}
 %
     We can extend this language with holes and cursors and get
     %
@@ -338,7 +338,7 @@ construct of local declarations.
     \end{equation*}
     is represented as the ABT
     \begin{equation*}
-        \text{let}(\text{cursor}_e(5); x.\text{exp}(\text{plus}(x;\text{hole}_e)))    
+        \text{let}(\text{cursor}_e(5); x.\text{exp}(\text{plus}(x;\text{hole}_e)))
     \end{equation*}
 \end{example}
 
@@ -386,7 +386,7 @@ therefore cannot be defined in a generalized manner.
     \{\text{plus}\}.\nil |\nil )$. This expression would
     substitute the current tree encapsulated by the cursor with the
     $plus$ operator, if the cursor is at the operator
-    $\text{hole}_e$. 
+    $\text{hole}_e$.
 \end{example}
 
 \subsubsection{Cursor contexts}
@@ -417,7 +417,7 @@ It depends on the editor expression being evaluated which of the two possible in
 
 In this section we present the transition systems and the general
 forms of transition rules defining these systems, based on the
-generalized syntax of the editor calculus previously presented.  
+generalized syntax of the editor calculus previously presented.
 
 \subsubsection{Editor Expressions} \label{sec:Semantics}
 
@@ -430,7 +430,7 @@ $Apc$ and the silent transition $\epsilon$. The transition relation
 $\Rightarrow$ is defined by the rules shown in
 \cref{fig:editor_expression_rules}. These facilitate ways of composing
 editor expressions together with conditions, sequential composition
-and recursion. 
+and recursion.
 
 \federeboks{c}{
     \infeshort{Cond-1}
@@ -447,7 +447,7 @@ and recursion.
     \\\\
     \infeshort{Seq-Trivial}
         {}
-        {\lr{\nil  \ggg E_2, a} \ltrans{\epsilon} \lr{E_2,a}}    
+        {\lr{\nil  \ggg E_2, a} \ltrans{\epsilon} \lr{E_2,a}}
     \\\\
     \infeshort{Recursion}
         {}
@@ -464,7 +464,7 @@ is defined as $(\ABT{}, Apc, \Rightarrow)$. This system describes the
 semantics of modifying the well-formed \abt $a$ encapsulated by the
 cursor, by either substituting it with an operator or moving the
 cursor up or down the tree. Transitions are therefore of the form $a
-\ltrans{\pi} a'$, where $a, a' \in \ABT{}$ and $\pi \in Apc$. 
+\ltrans{\pi} a'$, where $a, a' \in \ABT{}$ and $\pi \in Apc$.
 
 For substitution we define the transition rule for every label
 $\{o\} \in Apc$, which substitutes the \abt currently encapsulated by
@@ -496,7 +496,7 @@ operator, respectively.
 \federeboks{c}{
     \infeshort{Child-i}
         {}
-        {[\hat{o}(\Vec{x_1}.\hat{a}_1; \dots; \Vec{x_n}.\hat{a}_n)] \ltrans{\chld  \ i}} \\ 
+        {[\hat{o}(\Vec{x_1}.\hat{a}_1; \dots; \Vec{x_n}.\hat{a}_n)] \ltrans{\chld  \ i}} \\
         \quad \quad \quad \quad \quad $o(\Vec{x_1}.\hat{a}_1; \dots; \Vec{x_i}.[a_i]; \dots; \Vec{x_n}.\hat{a}_n)$
     \\\\
     \infeshort{Parent}
@@ -506,7 +506,7 @@ operator, respectively.
 }{\caption{General reduction rules for cursor movement}\label{fig:cursor_movement_rules}}
 
 \begin{example}\label{ex:substitution_rules}
-    We now define the semantics of the editor calculus for our simple language. We do not show the transition rules for editor expressions, since these are equivalent to the ones presented in \cref{fig:editor_expression_rules}. 
+    We now define the semantics of the editor calculus for our simple language. We do not show the transition rules for editor expressions, since these are equivalent to the ones presented in \cref{fig:editor_expression_rules}.
 
     The transition system for cursor movement and substitution is defined with respect to the operators $o$ in our language. Based on the general form of substitution rules shown in \cref{fig:substitution_rules}, we define a specialized rule for substituting the tree encapsulated by the cursor for every operator $o$. A selection of these are shown in \cref{fig:example_substitution_rules}.
     \federeboks{c}{
@@ -521,7 +521,7 @@ operator, respectively.
             {}
             {[\hat{a}]  \ltrans{\{\text{plus}\}} [\text{plus}(\hole{e};\hole{e})]}
             $\begin{array}{c}
-             \hat{a} \in \ABT{}_e 
+             \hat{a} \in \ABT{}_e
             \end{array}$
         \\\\
         \infelong{var}
@@ -545,7 +545,7 @@ operator, respectively.
             {\lr{\{\text{let}\}.\nil , \text{let $x = [\hole{e}]$ in $x+x$}} \ltransn{\{\text{let}\}}}
     \end{tabular}
     \end{center}
-        
+
     Similarly, using the general form of cursor movement transition rules in \cref{fig:cursor_movement_rules}, we define specialized rules for every argument $i$ of every operator $o$. In \cref{fig:example_cursor_movement_rules} we show the parent and child rules for the let operator specifically. The transition rules for the remaining operators would be defined analogous to these.
     \federeboks{c}{
         \infelong{letc-1}
@@ -619,12 +619,12 @@ $\Diamond o$ and $\square o$ are defined in
 \federeboks{c}{
     \infeshort{At-op}
         {}
-        {[o(\Vec{x_1}.\hat{a}_1; \dots; \Vec{x_n}.\hat{a}_n)] |= @o }  
+        {[o(\Vec{x_1}.\hat{a}_1; \dots; \Vec{x_n}.\hat{a}_n)] |= @o }
     \\\\
     \infeshort{Necessity}
         {[\hat{a}_1] |= \Diamond o \ \dots \ [\hat{a}_n] |= \Diamond o}
         {[o(\Vec{x_1}.\hat{a}_1; \dots; \Vec{x_n}.\hat{a}_n)] |=\square o}
-    
+
     \\\\
     \infeshort{Possibly-i}
         {[\hat{a}_i] |= \Diamond o}
@@ -635,19 +635,19 @@ $\Diamond o$ and $\square o$ are defined in
         {[\hat{a}] |= \Diamond o}
 }{\caption{Satisfaction relation for modal operators}\label{fig:satisfaction_relation_modal}}
 The modality $@o$ holds for an \abt $a$ if the cursor is at the root of
-$a$ and the root is the operator $o$. 
+$a$ and the root is the operator $o$.
 
 The modality $\Diamond o$ is satisfied for $a$ when the operator $o$ is
 found somewhere within $a$. The modality
 $\square o$ holds for $a$ when $o$ is found in every subtree of the
-ABT encapsulated by the cursor. 
+ABT encapsulated by the cursor.
 
 % \begin{example}\label{ex:modal_logic}
 %     We finalize our specialized editor calculus from \cref{ex:substitution_rules}, by defining the satisfaction relation. The propositional connectives are defined as previously shown in \cref{fig:satisfaction_relation_connectives}. In \cref{fig:example_satisfaction_relation} we have shown the satisfaction rules for all modalities for the $plus$ operator. Rules for the remaining operators $o$ are defined accordingly.
 %     \federeboks{c}{
 %         \infeshort{At-plus}
 %             {}
-%             {[\text{plus}(\hat{a}_1;\hat{a}_2)]|= @\text{plus} }  
+%             {[\text{plus}(\hat{a}_1;\hat{a}_2)]|= @\text{plus} }
 %         \\\\
 %         \infeshort{Pos1-plus}
 %             {[\hat{a}_1] |= \Diamond o}
@@ -684,7 +684,7 @@ guarantees can be expressed as the following theorem.
   \begin{enumerate}
   \item if $\lr{E,a} \ltrans{\alpha} \lr{E',a'}$, then
     $(p,\Gamma_e)\downarrow_\alpha \, \vdash \lr{E',a'} : \textsf{ok}$
-  
+
   \item $p, \Gamma_e \vdash \lr{E,a} \not\to \textsf{wrong}$
   \end{enumerate}
 \end{theorem}
@@ -723,7 +723,7 @@ each part of it can be seen in \cref{tab:encoding_requirements}.
        \ Modal Logic & \ \stlc with pattern matching and recursion, $\lambda_{->,p,\fix}$ \\
        \hline
        \ Editor Expressions & \ \stlc with pattern matching and recursion, $\lambda_{->,p,\fix}$ \\
-       \hline 
+       \hline
    \end{tabular}
    \vspace{1mm}
    \caption{Editor calculus fragments and the lambda calculus fragments
@@ -744,7 +744,7 @@ each part of it can be seen in \cref{tab:encoding_requirements}.
 where $\tau_s$ is a type for each sort $s \in \mathcal{S}$ and $\tau
 \to \tau$ and $\tau \times \tau$ are function and product types,
 respectively, and $\Gamma$ is a type environment
- $\Gamma : \Var \pra \Types$. 
+ $\Gamma : \Var \pra \Types$.
 
  The type systems all satisfy the subject
  reduction property.
@@ -757,7 +757,7 @@ respectively, and $\Gamma$ is a type environment
  It is this result that ensures that our encoding will indeed provide
  a general result about type soundness for the generalized editor
  calculus.
- 
+
 \subsection{Abstract binding trees}
 
 To encode abstract binding trees we only need to use the simply typed
@@ -766,7 +766,7 @@ excluding cursors, and the base types $s$ for every $s \in \SORT$.
 
 Typing rules for operators can be seen on \cref{fig:abt_typing_rules},
 where we can infer the type of an operator in the lambda-calculus by
-its arity.  
+its arity.
 \federeboks{C}{
     \infeshort{T-Operator}
         {o \in \OP \text{ and has arity } (\Vec{s_1}.s_1, \dots, \Vec{s_n}.s_n)s}
@@ -779,7 +779,7 @@ its arity.
 With the operators added as term constants and sorts added as base
 types, encoding an {\abt} is straightforward as we just have to curry the
 operator $o$, encode the children $a_1, \dots, a_n$ and add
-typings. This can be seen on \cref{fig:enc_abt}. 
+typings. This can be seen on \cref{fig:enc_abt}.
 
 \federeboks{C}{
     \encode{o(\Vec{x_1}.a_1, \dots , \Vec{x_n}.a_n)} = o \ (\lambda \Vec{x_1} : \Vec{s_1}.\encode{a_1}) \dots (\lambda \Vec{x_n} : \Vec{s_n}.\encode{a_n})
@@ -792,10 +792,10 @@ typings. This can be seen on \cref{fig:enc_abt}.
     We can now encode the operators in our small language. Following
     our singular rule for encoding {\abt}'s we get the resulting encoding
     seen on \cref{fig:enc_abt_example}, and the type for each operator
-    on \cref{fig:abt_example_type}. 
-    
+    on \cref{fig:abt_example_type}.
+
     \federeboks{C C}{
-        \encode{\text{plus}(a_1; a_2)} = \text{plus} \encode{a_1} \encode{a_2} 
+        \encode{\text{plus}(a_1; a_2)} = \text{plus} \encode{a_1} \encode{a_2}
         &
         \encode{\text{num}[n]} = \text{num}[n]
         \\\\
@@ -814,7 +814,7 @@ typings. This can be seen on \cref{fig:enc_abt}.
         \caption{Encoding of operators.}
         \label{fig:enc_abt_example}
     }
-    
+
     \federeboks{C C}{
         \text{plus} : e \to e \to e
         &
@@ -835,7 +835,7 @@ typings. This can be seen on \cref{fig:enc_abt}.
         \caption{Types of the encoded operators.}
         \label{fig:abt_example_type}
     }
-    
+
 \end{example}
 %
 The statement:
@@ -843,7 +843,7 @@ The statement:
         \text{let $x=[\hole{e}]$ in $x+5$}
     \end{equation*}
 will be encoded as
-    \begin{align*} 
+    \begin{align*}
         \text{let} \ (\text{cursor}_e(\text{hole}_e)) \ (\lambda x . \text{plus} \ \text{var}[x] \ \text{num}[5])
   \end{align*}
 
@@ -853,7 +853,7 @@ will be encoded as
 \subsection{Cursor contexts}\label{sec:enc_cursor_contexts}
 
 To represent {\abt}s with cursor contexts we introduce the pair construct similarly to \cite{types_programming_languages}.
-%In \cref{fig:abt_cursor_syntactic_forms} we introduce the new syntactic forms which include the pair construct, first projection, second projection and the product type. 
+%In \cref{fig:abt_cursor_syntactic_forms} we introduce the new syntactic forms which include the pair construct, first projection, second projection and the product type.
 %\federeboks{R C L l}{
 %    \multicolumn{4}{c}{Terms}
 %    \\
@@ -888,11 +888,11 @@ In \cref{fig:enc_abt_cursor} the encoding for cursor contexts can be seen. We ca
   %  \end{align*}
 %    Encoding $C[\dot{e}]$ following the rules for encoding contexts and the rules for encoding abts in \cref{ex:enc_abt_example} yields the following encoding:
 %    \begin{align*}
- %       & \encode{C[\dot{e}]} = \\ 
- %       & (\encode{\text{cursor}_e(\text{hole}_e)}, \encode{\text{let}([\cdot]; x.\text{plus}(\text{var}[x], \text{num}[5]))}) = \\ 
+ %       & \encode{C[\dot{e}]} = \\
+ %       & (\encode{\text{cursor}_e(\text{hole}_e)}, \encode{\text{let}([\cdot]; x.\text{plus}(\text{var}[x], \text{num}[5]))}) = \\
  %       & (\text{cursor}_e(\text{hole}_e), \text{let} \ [\cdot] \ (\lambda x . %\text{plus} \ \text{var}[x] \ \text{num}[5]))
  %   \end{align*}
-    
+
 %\end{example}
 
 \subsection{Atomic prefix commands}
@@ -907,7 +907,7 @@ shown below; $p$ is the metavariable for patterns.
 % syntactic category describing the pattern we are trying to
 % match. These patterns consist of variables, wildcards, operators,
 % pairs, and lastly bindings which recursively match on the body of an
-% abstraction.  
+% abstraction.
 % \federeboks{R C L l}{
 %     \multicolumn{4}{c}{Terms}
 %     \\
@@ -940,7 +940,7 @@ cursor operator with the child $a$.
     \textit{up} \define \lambda x:s.\text{match }x
     \quad o \ (.a_1) \dots (.[a_i]) \dots (.a_n) \to \\
     \quad [o \ (\lambda \Vec{x_1}.a_1) \dots (\lambda \Vec{x_n}.a_n)] \\\\
-     
+
     \textit{set} \define \lambda a:s.\lambda x:s.\text{match }x
     \quad [a'] \to [a]
 }{\caption{Defining cursor movement and
@@ -994,7 +994,7 @@ encoding of the editor expressions in the correct order. Recursion
 works by using the \fix operator. Lastly, conditional
 editor expressions are encoded such that we match on the evaluation of
 $\phi$ on the first projection of a context $C$ and apply the encoding
-of $E_1$ or $E_2$ on $C$ accordingly. 
+of $E_1$ or $E_2$ on $C$ accordingly.
 %\federeboks{R C L l}{
 %    \multicolumn{4}{c}{Terms}
 %    \\
@@ -1011,16 +1011,16 @@ of $E_1$ or $E_2$ on $C$ accordingly.
 %}{\caption{Abstract syntax for control structures and modal logic, extending the calculus with the \fix operator and boolean types and term constants.}\label{fig:control_syntactic_forms}}
 
 \federeboks{C C}{
-    \encode{\pi.E} = \lambda C:\text{Ctx}.\encode{E} ( (\encode{\pi} \ C.1) \ , C.2) 
+    \encode{\pi.E} = \lambda C:\text{Ctx}.\encode{E} ( (\encode{\pi} \ C.1) \ , C.2)
     \\[2mm]
     \encode{E_1 \ggg E_2}  = \lambda C:\text{Ctx}. \encode{E_2} (\encode{E_1} C)
     \\[2mm]
-    \encode{\rec x.E} = \text{fix } ( \lambda x: (\text{Ctx} \to \text{Ctx}).\encode{E}) 
+    \encode{\rec x.E} = \text{fix } ( \lambda x: (\text{Ctx} \to \text{Ctx}).\encode{E})
     \\[2mm]
     \encode{\phi => E_1 | E_2} = \lambda C:\text{Ctx}.\text{match} \ (\encode{\phi} \ C.1) \\
-        | \ \top ->  \encode{E_1} \ C 
+        | \ \top ->  \encode{E_1} \ C
     \\[2mm]
-    | \  \bot ->  \encode{E_2} \ C 
+    | \  \bot ->  \encode{E_2} \ C
     \\[2mm]
     \encode{\nil } = \lambda C:\text{Ctx}.C \quad \quad    \encode{x} = x
 
@@ -1030,13 +1030,13 @@ of $E_1$ or $E_2$ on $C$ accordingly.
 }
 
 \iffalse
-In \cref{fig:cond_aux} we define auxiliary functions that will help with the encoding of conditional expressions. The auxiliary functions $and$, $or$ and $neg$ function as their name would suggest. In our semantics, when checking if a formula $\phi$ holds, we do so against an \abt $a$ (i.e $a \vDash \phi$). When constructing the proof tree for such a formula we see that this \abt $a$ is propagated up through the proof tree, thus we need to have the ability to propagate an \abt throughout our encoded formula as well. To propagate this \abt through $and$, $or$ and $neg$ we define the combinators $phoenix$ (liftA2/liftM2 in Haskell) and $bluebird$ (function composition / B combinator).  
+In \cref{fig:cond_aux} we define auxiliary functions that will help with the encoding of conditional expressions. The auxiliary functions $and$, $or$ and $neg$ function as their name would suggest. In our semantics, when checking if a formula $\phi$ holds, we do so against an \abt $a$ (i.e $a \vDash \phi$). When constructing the proof tree for such a formula we see that this \abt $a$ is propagated up through the proof tree, thus we need to have the ability to propagate an \abt throughout our encoded formula as well. To propagate this \abt through $and$, $or$ and $neg$ we define the combinators $phoenix$ (liftA2/liftM2 in Haskell) and $bluebird$ (function composition / B combinator).
 \federeboks{L C L}{
     \text{phoenix} &\define& \lambda f: (\text{Bool} \to \text{Bool} \to \text{Bool}). \\
             &       & \lambda g: (s \to \text{Bool}). \\
             &       & \lambda h: (s \to \text{Bool}) . \\
             &       & \lambda a:s . \\
-            &       & f (g a) (h a) 
+            &       & f (g a) (h a)
     \\\\
     \text{bluebird} &\define& \lambda f: (\text{Bool} \to \text{Bool}). \\
              &       & \lambda g: (s \to \text{Bool}) . \\
@@ -1045,7 +1045,7 @@ In \cref{fig:cond_aux} we define auxiliary functions that will help with the enc
     \\\\
 
     \iffalse
-    \text{and} &\define& \lambda \phi_1:(s -> \text{Bool}). \lambda \phi_2:(s -> \text{Bool}) .\lambda a:s.\text{match} (\phi_1 \ a, \phi_2 \ a) \\&&(\top, \top) -> \top \\&|& (\_,\_) -> \bot 
+    \text{and} &\define& \lambda \phi_1:(s -> \text{Bool}). \lambda \phi_2:(s -> \text{Bool}) .\lambda a:s.\text{match} (\phi_1 \ a, \phi_2 \ a) \\&&(\top, \top) -> \top \\&|& (\_,\_) -> \bot
     \\\\
 
     \text{or} &\define& \lambda \phi_1:(s -> \text{Bool}). \lambda \phi_2:(s -> \text{Bool}) .\lambda a:s.\text{match} (\phi_1 \ a, \phi_2 \ a)\\&& (\bot, \bot) -> \bot \\&|& (\_,\_) -> \top
@@ -1056,12 +1056,12 @@ In \cref{fig:cond_aux} we define auxiliary functions that will help with the enc
     &|& \bot -> \top
     \\\\
     \fi
-    
+
     \text{or} &\define& \lambda b_1:\text{Bool}. \lambda b_2:\text{Bool}.\text{match} \  (b1,b2) \ \\
     &|& (\bot,\bot) -> \bot \\
     &|& (\_, \_) -> \top)
     \\\\
-    
+
     \text{and} &\define& \lambda b_1:\text{Bool}. \lambda b_2:\text{Bool}.\text{match} \  (b1,b2) \\
     &|& (\top,\top) -> \top \\
     &|& (\_, \_) -> \bot)
@@ -1073,17 +1073,17 @@ In \cref{fig:cond_aux} we define auxiliary functions that will help with the enc
 }{
     \caption{Function definitions for auxiliary functions.}\label{fig:cond_aux}
   }
-  
+
 The encoding of propositional connectives is shown in
 \cref{fig:encoding_connectives}.
 
 \federeboks{L}{
     \encode{\phi_1 \wedge \phi_2 } = \text{phoenix and} \ \encode{\phi_1} \ \encode{\phi_2}
     \\\\
-    
+
     \encode{\phi_1 \vee \phi_2} = \text{phoenix or} \ \encode{\phi_1} \ \encode{\phi_2}
     \\\\
- 
+
     \encode{\neg \phi} = \text{bluebird neg} \ \encode{\phi}
     \\\\
     \encode{@o} = \lambda x:s . \text{match } x \\
@@ -1091,7 +1091,7 @@ The encoding of propositional connectives is shown in
                 \quad | \ \_ \to \bot
 }{\caption{Encoding of propositional connectives}\label{fig:encoding_connectives}}
 In \cref{fig:cond_enc} we show the encoding of modal logic operators.
-\federeboks{L}{    
+\federeboks{L}{
     \encode{\Diamond o} = \text{\fix} (\lambda f:(s->\text{Bool})
     . \lambda x:s . \text{match } x \\
                         \quad | \ [o \ \_ \ \dots \ \_] \to \top \\
@@ -1107,7 +1107,7 @@ In \cref{fig:cond_enc} we show the encoding of modal logic operators.
     \caption{Encoding of modal logic and boolean logic operators.}
     \label{fig:cond_enc}
 }
-$@o$ is encoded such that we pattern match on the on the operator $o$, and if there is a match the resulting value is true, otherwise it is false. $\Diamond o$ uses the \fix operator, as the function is recursively defined. 
+$@o$ is encoded such that we pattern match on the on the operator $o$, and if there is a match the resulting value is true, otherwise it is false. $\Diamond o$ uses the \fix operator, as the function is recursively defined.
 $\square o$ consists of either applying $\Diamond o$ on all the children of the tree, or returning true if there are no children.
 \fi
 
@@ -1201,7 +1201,7 @@ to provide a meaningful set of concrete examples, demonstrating that
 the solution is indeed of a general nature.  % This section will attempt
 % to provide a meaningful set of concrete examples with languages (or
 % subsets thereof) of different paradigms and purposes.
- 
+
 % GitHub provides a top 30 ranking\cite{prog-lang-metrics} by number of unique \texttt{git} pushes with a given programming language on their platform, and this project will consider entries in the chart of popular character.
 
 Usage of the editor is not limited to programming languages, hence we
@@ -1219,12 +1219,12 @@ In \cite{sunemsc} we provide examples for subsets of C
 % syntax that is represented by a set of sorts $\mathcal{S}$, an
 % arity-indexed family of operators $\mathcal{O}$, and a sort-indexed
 % family of variables $\mathcal{X}$, as per Robert Harper's notation
-% \cite{harper_foundations}. 
+% \cite{harper_foundations}.
 
 % It can be a challenge from the user's perspective to provide a
 % specification based on what the calculus assumes. Therefore, it is
 % ideal for the implementation to provide other means of describing the
-% syntax of a language. 
+% syntax of a language.
 
 \subsubsection{The specification language}
 
@@ -1245,7 +1245,7 @@ Every syntactic category is represented by one or more non-terminals
 with a term, arity and operator name. The term might refer to other
 syntactic categories or its own. Each term is the concrete syntax of
 an operator, while the arity, in combination with the operator name,
-is a concise representation of the abstract syntax of an operator. 
+is a concise representation of the abstract syntax of an operator.
 The abstract syntax only makes use of the defined syntactic categories and, inspired by Harper\cite{harper_foundations}, binders can be specified in the arity description with a dot ('.'), e.g. $x.s$ specifies that variable $x$ is bound within the scope of $s$.
 
 Meta-variables can be represented in the concrete syntax (term) with a percentage sign ('\%') followed by a string, e.g. '\%int' represents any integer. The operator
@@ -1407,9 +1407,9 @@ and separate them into their own separate modules.
   Given the specification in example \cref{ex:as-sql-lang}, the parser can produce following \texttt{Declaration} for the \texttt{Q} algebraic data type in example \cref{ex:sql-data-types}:
   \begin{lstlisting}[language=elm]
 Elm.customType "Q"
-            [ Elm.variantWith "Select" 
-                [ Elm.Annotation.named [] "Id", 
-                  Elm.Annotation.named [] "Id", 
+            [ Elm.variantWith "Select"
+                [ Elm.Annotation.named [] "Id",
+                  Elm.Annotation.named [] "Id",
                   Elm.Annotation.named [] "Clause" ]
             ]
 \end{lstlisting}
@@ -1514,7 +1514,7 @@ which operator $o^C \in \mathcal{O}^C$ replaces each $o \in \mathcal{O}$.
 The list can be generated by performing pre-order traversal of the tree to be decomposed,
 extending the list with every $i$, representing which argument in an operator of
 arity $(\vec{s}_1.s_1, ... , \vec{s}_i.s_i, ..., \vec{s}_n.s_n)\mathcal{S}$ was
-followed to locate the cursor. 
+followed to locate the cursor.
 
 The implementation of such a function depends on the set of sorts $\mathcal{S}$
 and arity-indexed family of operators $\mathcal{O}$ given by the abstract syntax
@@ -1686,14 +1686,14 @@ forcing an explicit reference to the typeclass "instance" in a generic
 function, in contrast to Haskell.
 
 \begin{lstlisting}[language=Haskell,style=inline,caption={Haskell typeclass example},label={lst:haskell-typeclass}]
-class Substitutable a where 
+class Substitutable a where
     substitute :: a -> a -> a
-    
+
 instance Substitutable a where
     substitute _ replacement = replacement
 
 doIntSub :: Int
-doIntSub = substitute 1 2 
+doIntSub = substitute 1 2
 \end{lstlisting}
 
 \begin{lstlisting}[language=elm,style=inline,caption={Elm typeclass simulation example},label={lst:elm-typeclass}]
