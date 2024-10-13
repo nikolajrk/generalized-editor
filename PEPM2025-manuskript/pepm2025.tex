@@ -457,8 +457,6 @@ and recursion.
         {a \ltrans{\pi} a'}
         {\lr{\pi.E, C[a]} \ltrans{\pi} \lr{E, C[a']}}
 }{\caption{Reduction rules for editor expressions}\label{fig:editor_expression_rules}}
-.
-
 \subsubsection{Substitution and cursor movement}
 
 The labelled transition system for substitutions and cursor movement
@@ -1586,19 +1584,6 @@ well-formed tree, where the prior root of the well-formed tree becomes an argume
 
 To visualize this, consider the example already given for the \texttt{child} operations, but where applying the \texttt{Parent} operation to the tree in \cref{subfig:child2} would result in the tree in \cref{subfig:decomp-only}.
 
-\subsubsection{Conditional expressions, Sequence, Recursion and Context}
-
-Conditional expressions provide a way to perform different operations based on
-modal logic of the encapsulated ABT, such as the $@o$ operator which holds
-if the cursor is encapsulating the operator $o$. This is defined as \texttt{At-op}
-along \texttt{Necessity}, \texttt{Possibly-i} and \texttt{Possibly-i} operators
-in the editor calculus (\cref{fig:satisfaction_relation_modal}). Conditionals
-can be connected with logical operators, forming the operators \texttt{Negation},
-\texttt{Conjunction}, \texttt{Disjunction-1} and \texttt{Disjunction-2}
-(\cref{fig:satisfaction_relation_connectives}).
-
-With the current state of the implementation, it is only possible to query for a given conditional expression $\phi$, which will return wether that condtion holds. The rest is yet to be implemented.
-
 \begin{example}\label{ex:sql-repl}
 An editing session inside a generated instance of the SQL editor in an Elm REPL is
 shown in \cref{lst:SQL-repl}. The sample tree consists of a SQL query
@@ -1613,14 +1598,9 @@ of the tree. Moving the cursor to child 1 moves the cursor to the first child
 of the \texttt{Select} operator, as expected. Simple substitution
 is shown where the cursor is encapsulating the root of tree, resulting
 in the substitute being the only element under the updated cursor.
-Finally, simple conditions are queried, such as if the cursor is encapsulating
-a \texttt{Q\_CLess} operator, and if a \texttt{Const\_CLess} operator exists in
-the encapsulated subtree.
-
 
 \begin{lstlisting}[style=inline, language=elm, caption={SQL editor session in an Elm REPL}, label={lst:SQL-repl}]
 > example = Q (Select (Ident "col-a") (Ident "table-b") (Where (Greater (Eident (Ident "col-a")) (Econst (Num 2)))))
-Q (Select (Ident "col-a") (Ident "table-b") (Where (Greater (Eident (Ident "col-a")) (Econst (Num 2)))))
     : Base
 
 > decomposed = decompose example
@@ -1637,22 +1617,22 @@ Just (Select_CLess_cctx1 Cctx_hole (Ident_CLess "table-b") (Where_CLess (Greater
 > substitute decomposed (Q_CLess Hole_q_CLess)
 Just (Cctx_hole,Root_q_CLess Hole_q_CLess)
     : Maybe ( Cctx, Wellformed )
-
-> evalCond decomposed <| At <| Q_CLess <| Select_CLess Hole_id_CLess Hole_id_CLess Hole_clause_CLess
-True : Bool
-
-> evalCond decomposed <| Neg <| At <| Q_CLess <| Select_CLess Hole_id_CLess Hole_id_CLess Hole_clause_CLess
-False : Bool
-
-> evalCond decomposed <| Possibly <| Const_CLess <| Num_CLess 1
-True : Bool
-
-> evalCond decomposed <| Necessarily <| Const_CLess <| Num_CLess 1
-True : Bool
-
 \end{lstlisting}
 
 \end{example}
+
+\subsubsection{Conditional expressions, Sequence, Recursion and Context}
+
+Conditional expressions provide a way to perform different operations based on
+modal logic of the encapsulated ABT, such as the $@o$ operator which holds
+if the cursor is encapsulating the operator $o$. This is defined as \texttt{At-op}
+along \texttt{Necessity}, \texttt{Possibly-i} and \texttt{Possibly-i} operators
+in the editor calculus (\cref{fig:satisfaction_relation_modal}). Conditionals
+can be connected with logical operators, forming the operators \texttt{Negation},
+\texttt{Conjunction}, \texttt{Disjunction-1} and \texttt{Disjunction-2}
+(\cref{fig:satisfaction_relation_connectives}).
+
+With the current state of the implementation, it is only possible to query for a given conditional expression $\phi$, which will return wether that condtion holds. The rest is yet to be implemented.
 
 \subsubsection{Generic implementation}
 Given the generic nature of the editor calculus, the implementation could
