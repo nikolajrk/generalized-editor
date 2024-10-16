@@ -1404,7 +1404,6 @@ and separate them into their own separate modules.
 
 \begin{example}{ex:parser-to-elm-codegen}
   Given the specification in example \cref{ex:as-sql-lang}, the parser can produce following \texttt{Declaration} for the \texttt{Q} algebraic data type in example \cref{ex:sql-data-types}:
-  \newpage
   \begin{lstlisting}[language=elm]
 Elm.customType "Q"
             [ Elm.variantWith "Select"
@@ -1550,7 +1549,6 @@ is replaced with its corresponding cursorless operator $\hat{o} \in \hat{\mathca
 The cursor context and well-formed tree pair as defined above will decompose
 any well-formed \abt into a unique pair of a cursor context and a well-formed tree.
 
-
 \subsubsection{Cursor movement - Child}
 Cursor movement is a fundamental operation, allowing the editor to move the cursor
 to a different position, changing the target of editor expressions. This is defined
@@ -1570,7 +1568,7 @@ in the well-formed tree.
 For a visualization of this, see \cref{fig:movement-example} showing the result
 of applying various \texttt{child} operations to a decomposed tree.
 
-\begin{figure}[H]
+\begin{figure}[h]
   \centering
   \begin{subfigure}[b]{0.9\linewidth}
     \centering
@@ -1621,6 +1619,8 @@ has no cursor, showing that the decomposition of the tree will result in a
 cursor context containing only the context hole and a well-formed tree
 with the cursor at the root of the tree.
 
+\vspace{2mm}
+\begin{minipage}{\linewidth}
 \begin{lstlisting}[style=inline, language=elm, caption={SQL editor session in an Elm REPL}, label={lst:SQL-repl}]
 > example = Q (Select (Ident "col-a") (Ident "table-b") (Where (Greater (Eident (Ident "col-a")) (Econst (Num 2)))))
     : Base
@@ -1640,6 +1640,8 @@ Just (Select_CLess_cctx1 Cctx_hole (Ident_CLess "table-b") (Where_CLess (Greater
 Just (Cctx_hole,Root_q_CLess Hole_q_CLess)
     : Maybe ( Cctx, Wellformed )
 \end{lstlisting}
+\end{minipage}
+\vspace{2mm}
 
 Attempting to move the cursor to the
 parent will result in \texttt{Nothing} (empty value of the \texttt{Maybe} option type in Elm),
