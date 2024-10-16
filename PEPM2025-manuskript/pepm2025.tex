@@ -69,7 +69,7 @@
 %%
 %% The "title" command has an optional parameter,
 %% allowing the author to define a "short title" to be used in page headers.
-\title{A type-safe calculus for generating
+\title{A type safe calculus for generating
   syntax-directed editors}
 
 %%
@@ -138,12 +138,11 @@
   calculus, which can be used to specify a specialized syntax-directed
   editor for any language, given its abstract syntax. Moreover we show
   how to implement an editor generator that allows one to generate an
-  editor calculus-basedç syntax-directed editor from a language
+  editor calculus-based syntax-directed editor from a language
   specification. The generalized editor calculus can be encoded into a
   simply typed lambda calculus, extended with pairs, booleans, pattern
   matching and fixed points. This implies a general type safety result
-  that holdsfor any instantiation.
-
+  that holds for any instantiation.
 \end{abstract}
 
 %%
@@ -298,7 +297,7 @@ as the smallest family that satisfies the conditions of $\ABT{}$'s in
 
 We let $\hole{s}$ denote holes that can be replaced by terms of sort
 $s$ and let $[e]$ note a cursor placed over the term $e$. Following
-Harper \cite{harper_foundations}, write $s_1.s_2$ to denote that an
+Harper \cite{harper_foundations}, we write $s_1.s_2$ to denote that an
 argument of an operator has sort $s_2$ and involves a binder of sort
 $s_1$.
 
@@ -317,7 +316,7 @@ construct of local declarations.
     \begin{equation*}
         \text{let $x=5$ in let $y=10$ in $x+y$}
     \end{equation*}
-    as the ABT
+    as the \abt
     \begin{equation*}
         \text{let}(5;x.\text{let}(10;y.\text{exp}(\text{plus}(x;y))))
     \end{equation*}
@@ -336,7 +335,7 @@ construct of local declarations.
     \begin{equation*}
         \text{let $x=[5]$ in $x+\hole{e}$}
     \end{equation*}
-    is represented as the ABT
+    is represented as the \abt
     \begin{equation*}
         \text{let}(\text{cursor}_e(5); x.\text{exp}(\text{plus}(x;\text{hole}_e)))
     \end{equation*}
@@ -390,9 +389,9 @@ therefore cannot be defined in a generalized manner.
 \end{example}
 
 \subsubsection{Cursor contexts}
-In editor expressions, we frequently refer to performing actions on, or with, the abt that is currently encapsulated by the cursor. To support this notion we introduce cursor contexts $C$, inspired by the zipper data structure by \cite{huet_zipper}, as a way to locate the cursor in an abt. Central to this idea is the cursor context $\ctxhole$, or context hole, which specifies the subtree within which the cursor must reside, either as the root, or one of the first children.  For the full definition of cursor contexts, we refer to the full version of the paper, or to \cite{type_safe_structure_editor}, as they have a very similar construct.
+In editor expressions, we frequently refer to performing actions on, or with, the \abt that is currently encapsulated by the cursor. To support this notion we introduce cursor contexts $C$, inspired by the zipper data structure by \cite{huet_zipper}, as a way to locate the cursor in an \abt. Central to this idea is the cursor context $\ctxhole$, or context hole, which specifies the subtree within which the cursor must reside, either as the root, or one of the first children.  For the full definition of cursor contexts, we refer to the full version of the paper, or to \cite{type_safe_structure_editor}, as they have a very similar construct.
 
-Although a cursor context accurately specifies the subtree where the cursor must reside, it does not inherently guarantee the presence of only one cursor within that subtree. Therefore, it becomes necessary to introduce the concept of well-formed abt's. Informally, a well-formed abt is simply an abt containing exactly one cursor. This is guarantied when an abt can be interpreted as $C[\dot{a}]$, meaning the context C, where $\ctxhole$ is substituted with a tree $\dot{a}$, where the cursor-operator is either the root $\dot{a}$, or one of the children of the root. For example the statement
+Although a cursor context accurately specifies the subtree where the cursor must reside, it does not inherently guarantee the presence of only one cursor within that subtree. Therefore, it becomes necessary to introduce the concept of well-formed $\abt$s. Informally, a well-formed \abt is simply an \abt containing exactly one cursor. This is guarantied when an \abt can be interpreted as $C[\dot{a}]$, meaning the context C, where $\ctxhole$ is substituted with a tree $\dot{a}$, where the cursor-operator is either the root $\dot{a}$, or one of the children of the root. For example the statement
     \begin{equation*}
         \text{let $x=[\hole{e}]$ in $x+5$}
     \end{equation*}
@@ -473,7 +472,7 @@ $o(\Vec{x_1}.\hole{{s_1}}; \dots ; \Vec{x_n}.\hole{{s_n}})$ in which
 the binders of the $i$'th argument of $o$ are $\Vec{x_i}$ and the sort
 of the $i$'th argument is $s_i$. The general case of this rule is
 shown in \cref{fig:substitution_rules}. The side-condition ensures
-that we can only substitute operators of sort $s$ with {\abt}'s of
+that we can only substitute operators of sort $s$ with {\abt}s of
 sort $s$.
 
 \federeboks{c}{
@@ -640,7 +639,7 @@ $a$ and the root is the operator $o$.
 The modality $\Diamond o$ is satisfied for $a$ when the operator $o$ is
 found somewhere within $a$. The modality
 $\square o$ holds for $a$ when $o$ is found in every subtree of the
-ABT encapsulated by the cursor.
+\abt encapsulated by the cursor. 
 
 % \begin{example}\label{ex:modal_logic}
 %     We finalize our specialized editor calculus from \cref{ex:substitution_rules}, by defining the satisfaction relation. The propositional connectives are defined as previously shown in \cref{fig:satisfaction_relation_connectives}. In \cref{fig:example_satisfaction_relation} we have shown the satisfaction rules for all modalities for the $plus$ operator. Rules for the remaining operators $o$ are defined accordingly.
@@ -790,7 +789,7 @@ typings. This can be seen on \cref{fig:enc_abt}.
 
 \begin{example}\label{ex:enc_abt_example}
     We can now encode the operators in our small language. Following
-    our singular rule for encoding {\abt}'s we get the resulting encoding
+    our singular rule for encoding $\abt$s we get the resulting encoding
     seen on \cref{fig:enc_abt_example}, and the type for each operator
     on \cref{fig:abt_example_type}.
 
@@ -1162,7 +1161,7 @@ of the encoding of an \abt and $T_C$ is the type of the encoding of a context.
 
 \section{Soundness of the encoding}
 
-The main result about our encoding is that it is sound wrt. the
+The main result about our encoding is that it is sound w.r.t the
 operational semantics of the original calculus.
 
 \begin{theorem}[Soundness] For every editor expression $E$ and \abt $a$
@@ -1181,7 +1180,7 @@ operational semantics of the original calculus.
   axioms, as these rules does not need an inductive hypothesis.
 \end{proof}
 Because of Theorem \ref{thm:subred}, we now get that our encoding is
-type-safe.
+type safe.
 
 \begin{corollary}
   If $\Gamma \vdash \encode{\lr{E,C[a]}} : t$ then, if $\lr{E,a}
@@ -1369,7 +1368,7 @@ The tool is an alternative to the otherwise obvious (and arguably tedious)
 strategy of having a source code template, where certain placeholders are
 replaced with relevant data or code snippets associated with the parsed syntax.
 
-Besides offering the ability to generate source code, it offers offers automatic
+Besides offering the ability to generate source code, it offers automatic
 imports and built-in type inference. Example usage of Elm CodeGen from
 the documentation\cite{elm-codegen-package} is given in \cref{lst:decl-codegen-ex} and \cref{lst:decl-codegen-gen}.
 
@@ -1426,7 +1425,7 @@ type Q
 
 Having generated all sorts and operators as algebraic data types in Elm,
 the next step is to implement functionality for manipulating the algebraic
-data types, representing {\abt}'s in the editor.
+data types, representing $\abt$s in the editor.
 
 \subsubsection{Decomposing trees}
 
@@ -1463,7 +1462,7 @@ This allows for any operator
 of any sort to be decomposed, although the ideal solution would be having
 a way to specify the starting symbol in the syntax representation.
 
-The editor calculus defines well-formed trees as {\abt}'s
+The editor calculus defines well-formed trees as $\abt$s
 with exactly one cursor either as the root or as an argument of the root.
 However, this definition, in conjunction with the cursor context definition,
 leads to multiple valid decompositions for an \abt in certain scenarios,
@@ -1504,7 +1503,7 @@ This way of decomposing an \abt always places the cursor at the root of the
 well-formed tree. This makes it impossible for the cursor to encapsulate the immediate
 child of the root, rendering the property of well-formed trees having a cursor at one of the immediate children of the root redundant. For this reason, the code generation
 has been revised to only generate an operator of arity $(\hat{s})\dot{s}$,
-representing that the cursor only encapsulates the root of a cursorless ABT
+representing that the cursor only encapsulates the root of a cursorless \abt
 of sort $\hat{s}$.
 
 \subsubsection{Cursor path}
@@ -1655,7 +1654,7 @@ in the substitute being the only element under the updated cursor.
 \subsubsection{Conditional expressions, Sequence, Recursion and Context}
 
 Conditional expressions provide a way to perform different operations based on
-modal logic of the encapsulated ABT, such as the $@o$ operator which holds
+modal logic of the encapsulated \abt, such as the $@o$ operator which holds
 if the cursor is encapsulating the operator $o$. This is defined as \texttt{At-op}
 along \texttt{Necessity}, \texttt{Possibly-i} and \texttt{Possibly-i} operators
 in the editor calculus (\cref{fig:satisfaction_relation_modal}). Conditionals
@@ -1733,7 +1732,7 @@ sound, and as a consequence, given that the type system of the
 extended lambda calculus is sound, it follows that our editor calculus
 is type safe.
 
-Based on our encoding we have implemented a type-safe, generalized
+Based on our encoding we have implemented a type safe, generalized
 syntax-directed editor in Elm.  The implementation supports basic editing
 functionalities such as cursor movement and substitutions, and
 definitions of subsets of different languages, including C, SQL, and
