@@ -237,13 +237,13 @@ operations manipulate abstract syntax trees from an applied
 $\lambda$-calculus.
 
 A major advantage of this approach is that it is typed and that type
-systems can be provably sound: The type system of the editor calculus
+systems can be proven to be sound: The type system of the editor calculus
 will then guarantee that if an editor term $E$ is well-typed, then $E$
 will produce a well-formed program.
 
 However, existing editor calculi do not account for context-sensitive
 aspects of program syntax, and notably not the binding
-mechanisms that are prominent in abstract syntax.
+mechanisms that are prominent in higher-order abstract syntax.
 
 Moreover, the work on editor calculi has so far been dependent on the
 syntax of the programming language that the editor must
@@ -266,7 +266,10 @@ the simply-typed lambda calculus extended with pairs, booleans,
 pattern matching and fixed-points. These fragments are all known to
 have type systems with strong safety guarantees, and in this way we
 obtain a general result on type safety that applies to any instance of
-our generalized editor calculus.
+our generalized editor calculus. Finally, given the encoding, we show
+how the generalized editor calculus can be implemented in a modern
+functional language and we provide an example in the form of an editor 
+instance.
 
 \section{A Generalized Editor Calculus}\label{sec:general_editor}
 
@@ -530,7 +533,7 @@ operator, respectively.
              \hat{a} \in \ABT{}_e
             \end{array}$
     }{\caption{Selected reduction rules for substitution}\label{fig:example_substitution_rules}}
-    Notice that in every rule we ensure that the substitution can only be performed if the \abt $\hat{a}$ is of the same sort as the operator. For example, given the configuration \[ \lr{\{let\}.nil, \text{let $x = [\hole{e}]$ in $x+x$}}\] we cannot substitute in a statement, as shown below.
+    Notice that in every rule we ensure that the substitution can only be performed if the \abt $\hat{a}$ is of the same sort as the operator. For example, given the configuration \[ \lr{\{let\}.nil, \text{let $x = [\hole{e}]$ in $x+x$}}\] we cannot substitute in a statement, as shown in the following.
     \begin{center}
     \begin{tabular}{c}
         \inference[\runa{Context}]
@@ -1402,7 +1405,7 @@ well-formed trees $\dot{\mathcal{O}},\dot{\mathcal{S}}$,
 the CodeGen package can generate algebraic data types for every sort and its operators
 and separate them into their own separate modules.
 
-\begin{example}{ex:parser-to-elm-codegen}
+\begin{example}\label{ex:parser-to-elm-codegen}
   Given the specification in example \cref{ex:as-sql-lang}, the parser can produce following \texttt{Declaration} for the \texttt{Q} algebraic data type in example \cref{ex:sql-data-types}:
   \begin{lstlisting}[language=elm]
 Elm.customType "Q"
@@ -1413,7 +1416,7 @@ Elm.customType "Q"
             ]
 \end{lstlisting}
 
-  This declaration, if passed to Elm CodeGen's \texttt{File} function, would generate a source file with following contents:
+  This declaration, if passed to Elm CodeGen's \texttt{File} function, would generate a file with following contents:
   \begin{lstlisting}[language=elm]
 type Q
     = Select Id Id Clause
